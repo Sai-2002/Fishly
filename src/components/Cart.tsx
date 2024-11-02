@@ -63,7 +63,7 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
 
     try {
       const response = await axios.post(
-        "http://api.fishly.co.in/verify",
+        "https://api.fishly.co.in/verify",
         {},
         {
           headers: {

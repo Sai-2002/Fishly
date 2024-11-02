@@ -23,7 +23,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://api.fishly.co.in/getAll");
+        const response = await axios.get("https://api.fishly.co.in/getAll");
 
         setProducts(response.data);
 

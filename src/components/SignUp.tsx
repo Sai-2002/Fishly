@@ -52,7 +52,7 @@ const SignUpDetails: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://api.fishly.co.in/signUp",
+        "https://api.fishly.co.in/signUp",
         formData,
         {
           headers: {

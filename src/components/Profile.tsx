@@ -45,7 +45,7 @@ const Profile: React.FC = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://api.fishly.co.in/getUserDetails/${uid}`)
+        const response = await axios.get(`https://api.fishly.co.in/getUserDetails/${uid}`)
 
         setUserCred(response.data)
 
@@ -57,7 +57,7 @@ const Profile: React.FC = () => {
     const getAllOrder = async () => {
       try {
         const response = await axios.get(
-          `http://api.fishly.co.in/getOrders/${uid}`
+          `https://api.fishly.co.in/getOrders/${uid}`
         );
 
         setOrders(response.data)
@@ -76,7 +76,7 @@ const Profile: React.FC = () => {
 
   // const updateAddress = async () => {
   //   try {
-  //     const response = await axios.post("http")
+  //     const response = await axios.post("https")
   //   } catch (error) {
   //     console.error(error)
   //   }

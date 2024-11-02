@@ -45,7 +45,7 @@ const Checkout: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://api.fishly.co.in/getAddress/${uid}`,
+          `https://api.fishly.co.in/getAddress/${uid}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -87,7 +87,7 @@ const Checkout: React.FC = () => {
   const handleAddress = async () => {
     try{
       const resp = await axios.post(
-        `http://api.fishly.co.in/updateAddress/${uid}`,
+        `https://api.fishly.co.in/updateAddress/${uid}`,
         Adddata,
         {
           headers: {
@@ -120,7 +120,7 @@ const Checkout: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("http://api.fishly.co.in/addOrder", data, {
+      const response = await axios.post("https://api.fishly.co.in/addOrder", data, {
         headers: {
           "Content-Type": "application/json"
         }
