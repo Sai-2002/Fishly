@@ -156,7 +156,7 @@ const Checkout: React.FC = () => {
 
   // Cutting method display logic
   const cuttingMethod =
-    selectedService === "Prebooking"
+    selectedService === "Onsite cut" || selectedService === "Precut"
       ? `${selectedService} (Date: ${prebookingDate}, Time: ${prebookingTime})`
       : selectedService;
 
@@ -211,7 +211,9 @@ const Checkout: React.FC = () => {
 
       {/* Service Options Section */}
       <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-lg font-semibold mb-4">Service Option</h2>
+        <h2 className="text-lg font-semibold mb-4">
+          Service Option for Pre-Booking
+        </h2>
         <div className="flex items-center mb-4">
           <input
             type="radio"
@@ -224,6 +226,24 @@ const Checkout: React.FC = () => {
           />
           <label htmlFor="onsiteCut">Onsite cut</label>
         </div>
+        {selectedService === "Onsite cut" && (
+          <div className="mt-4">
+            <input
+              type="date"
+              value={prebookingDate}
+              onChange={(e) => setPrebookingDate(e.target.value)}
+              className="w-full p-3 mb-3 border border-gray-300 rounded"
+              required
+            />
+            <input
+              type="time"
+              value={prebookingTime}
+              onChange={(e) => setPrebookingTime(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded"
+              required
+            />
+          </div>
+        )}
         <div className="flex items-center mb-4">
           <input
             type="radio"
@@ -236,19 +256,7 @@ const Checkout: React.FC = () => {
           />
           <label htmlFor="precut">Precut</label>
         </div>
-        <div className="flex items-center">
-          <input
-            type="radio"
-            id="prebooking"
-            name="serviceOption"
-            value="Prebooking"
-            checked={selectedService === "Prebooking"}
-            onChange={() => setSelectedService("Prebooking")}
-            className="mr-2"
-          />
-          <label htmlFor="prebooking">Prebooking</label>
-        </div>
-        {selectedService === "Prebooking" && (
+        {selectedService === "Precut" && (
           <div className="mt-4">
             <input
               type="date"

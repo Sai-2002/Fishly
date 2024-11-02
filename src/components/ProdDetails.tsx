@@ -15,6 +15,40 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
   const product = location.state; // Accessing product directly from location state
   const { totalCount, updateCartItem, removeFromCart } = useCart();
   const [count, setCount] = useState(0);
+  const [istoggle, setIsToggle] = useState(false)
+  const buttonData = [
+    {
+      id: 1,
+      name: "Gravy",
+      description: product.gravy,
+    },
+    {
+      id: 2,
+      name: "Fry",
+      description: product.fry,
+    },
+    {
+      id: 3,
+      name: "Barbeque",
+      description: product.barbeque,
+    },
+  ];
+
+  const [popupContent, setPopupContent] = useState<{
+    name: string;
+    description: string;
+  } | null>(null);
+
+  const openPopup = (content: { name: string; description: string }) => {
+    setPopupContent(content);
+    setIsToggle(true);
+  };
+
+  // Function to close the popup
+  const closePopup = () => {
+    setIsToggle(false);
+    setPopupContent(null);
+  };
 
   // Scroll to top on mount
   useEffect(() => {
@@ -33,6 +67,10 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
       return newCount;
     });
   };
+
+  const togglePopup=()=>{
+    setIsToggle(!istoggle)
+  }
 
   if (!product) return <div>Error: Product details are unavailable.</div>;
 
@@ -76,11 +114,10 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
               </button> */}
             </div>
 
-            <div className="w-full md:w-1/2 flex flex-col justify-center">
+            <div className="w-full md:w-1/2 flex flex-col justify-center font-sans">
               <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
               <p className="text-lg mb-1">
-                <span className="font-semibold">Weight:</span>{" "}
-                {product.weight}
+                <span className="font-semibold">Weight:</span> {product.weight}
               </p>
               <p className="text-lg mb-1">
                 <span className="font-semibold">Pieces:</span> {product.pieces}
@@ -89,14 +126,14 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
                 <span className="font-semibold">Servings:</span>{" "}
                 {product.servings} person
               </p>
-              <p className="text-2xl font-semibold mb-2 text-[#22ccdd]">
-                <span className="font-semibold">Price:</span> ₹{product.price}
-              </p>
+
               <p className="text-lg mb-4">
                 <span className="font-semibold">Description:</span> This is a
                 detailed description of {product.name}.
               </p>
-
+              <p className="text-2xl font-semibold mb-2 text-[#22ccdd]">
+                <span className="font-semibold">Price:</span> ₹{product.price}
+              </p>
               <p
                 className="text-blue-500 cursor-pointer"
                 onClick={toggleRecipe}
@@ -104,11 +141,43 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
                 {isRecipeVisible ? "Hide Recipe" : "Show Recipe"}
               </p>
               {isRecipeVisible && (
-                <div className="recipe-content">
-                  <p>{product.recipe}</p>
+                <div className="pt-4">
+                  <div className="flex space-x-4">
+                    {buttonData.map((button) => (
+                      <button
+                        key={button.id}
+                        onClick={() =>
+                          openPopup({
+                            name: button.name,
+                            description: button.description,
+                          })
+                        }
+                        className="px-4 py-2 bg-gradient-to-r from-[#81f8bb] to-[#22ccdd] text-black focus:outline-none rounded-lg"
+                      >
+                        {button.name}
+                      </button>
+                    ))}
+                  </div>
 
-                  {/* <p>IPOTHIKU POI SAMAI</p> */}
-
+                  {/* Popup overlay */}
+                  {istoggle && popupContent && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                      <div className="relative p-6 bg-white rounded-lg shadow-lg w-80">
+                        <h2 className="text-lg font-bold">
+                          {popupContent.name}
+                        </h2>
+                        <p className="mt-2 text-gray-600">
+                          {popupContent.description}
+                        </p>
+                        <button
+                          onClick={closePopup}
+                          className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
