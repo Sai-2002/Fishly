@@ -117,7 +117,8 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
             <div className="w-full md:w-1/2 flex flex-col justify-center font-sans">
               <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
               <p className="text-lg mb-1">
-                <span className="font-semibold">Weight:</span> {product.weight} g
+                <span className="font-semibold">Weight:</span> {product.weight}{" "}
+                g
               </p>
               <p className="text-lg mb-1">
                 <span className="font-semibold">Pieces:</span> {product.pieces}
@@ -161,14 +162,18 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
 
                   {/* Popup overlay */}
                   {istoggle && popupContent && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                      <div className="relative p-6 bg-white rounded-lg shadow-lg w-80">
-                        <h2 className="text-lg font-bold">
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                      <div className="relative p-6 bg-white rounded-lg shadow-lg max-w-lg w-full max-h-[80vh] overflow-y-auto lg:max-w-2xl">
+                        <h2 className="text-lg font-bold mb-4">
                           {popupContent.name}
                         </h2>
-                        <p className="mt-2 text-gray-600">
-                          {popupContent.description}
-                        </p>
+
+                        {/* Content Wrapper with Padding for Large Content */}
+                        <div className="text-gray-600 space-y-4">
+                          <p>{popupContent.description}</p>
+                        </div>
+
+                        {/* Close Button */}
                         <button
                           onClick={closePopup}
                           className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
