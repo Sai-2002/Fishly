@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef} from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -13,7 +13,7 @@ const Slideshow: React.FC = () => {
   ];
 
   // State to track the current slide
-  const [currentSlide, setCurrentSlide] = useState(0);
+  // const [currentSlide, setCurrentSlide] = useState(0);
 
   // Slider settings
   const settings = {
@@ -25,9 +25,9 @@ const Slideshow: React.FC = () => {
     autoplay: true,
     autoplaySpeed: 4000, // Set to 4 seconds
     cssEase: "ease-in-out", // Smooth transition
-    beforeChange: (_current: number, next: number) => {
-      setCurrentSlide(next); // Update the current slide state
-    },
+    // beforeChange: (_current: number, next: number) => {
+    //   setCurrentSlide(next); // Update the current slide state
+    // },
   };
 
   // Create a reference to the slider
@@ -44,7 +44,7 @@ const Slideshow: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full mx-auto px-4">
+    <div className="relative w-full mx-auto px-4 pt-6">
       {/* Aspect Ratio Wrapper */}
       <div className="relative w-full pb-[25%]">
         {" "}
@@ -81,7 +81,7 @@ const Slideshow: React.FC = () => {
       </button>
 
       {/* Bullet Points */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+      {/* <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         {images.map((_, index) => (
           <div
             key={index}
@@ -90,7 +90,7 @@ const Slideshow: React.FC = () => {
             }`} // Enlarges and changes color to black when active
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -68,9 +68,9 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
     });
   };
 
-  const togglePopup=()=>{
-    setIsToggle(!istoggle)
-  }
+  // const togglePopup=()=>{
+  //   setIsToggle(!istoggle)
+  // }
 
   if (!product) return <div>Error: Product details are unavailable.</div>;
 
@@ -117,7 +117,7 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
             <div className="w-full md:w-1/2 flex flex-col justify-center font-sans">
               <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
               <p className="text-lg mb-1">
-                <span className="font-semibold">Weight:</span> {product.weight}
+                <span className="font-semibold">Weight:</span> {product.weight} g
               </p>
               <p className="text-lg mb-1">
                 <span className="font-semibold">Pieces:</span> {product.pieces}

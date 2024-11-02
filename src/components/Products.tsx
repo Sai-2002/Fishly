@@ -91,7 +91,7 @@ const Products: React.FC<ProductsProps> = ({
                   </h3>
                   <p className="text-sm text-black flex items-center">
                     <FaBalanceScale className="mr-2" />
-                    {product.weight}
+                    {product.weight} g
                   </p>
                   <p className="text-sm text-black flex items-center">
                     <FaUtensils className="mr-2" />
@@ -99,7 +99,7 @@ const Products: React.FC<ProductsProps> = ({
                   </p>
                   <p className="text-sm text-black flex items-center">
                     <BiDish className="mr-2" />
-                    {product.servings}
+                    {product.servings} person
                   </p>
                 </div>
                 <div className="text-right">
