@@ -31,48 +31,42 @@ const Profile: React.FC = () => {
   const navigate = useNavigate();
   // const { cartItems } = useCart(); // Access cartItems from CartContext
 
-  const [orders, setOrders] = useState<Order[]|null>(null);
-  const [userCred, setUserCred] = useState<User|null>(null);
-
+  const [orders, setOrders] = useState<Order[] | null>(null);
+  const [userCred, setUserCred] = useState<User | null>(null);
 
   const handleBackToHome = () => {
     navigate("/");
   };
 
-  const uid = sessionStorage.getItem("uid")
+  const uid = sessionStorage.getItem("uid");
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://api.fishly.co.in/getUserDetails/${uid}`)
+        const response = await axios.get(
+          `https://api.fishly.co.in/getUserDetails/${uid}`
+        );
 
-        setUserCred(response.data)
-
-
+        setUserCred(response.data);
       } catch (error) {
-        console.error(error) 
+        console.error(error);
       }
-    } 
+    };
     const getAllOrder = async () => {
       try {
         const response = await axios.get(
           `https://api.fishly.co.in/getOrders/${uid}`
         );
 
-        setOrders(response.data)
+        setOrders(response.data);
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchData()
-    getAllOrder()
-
-  },[]);
-
-
-  
+    fetchData();
+    getAllOrder();
+  }, []);
 
   // const updateAddress = async () => {
   //   try {
@@ -86,7 +80,7 @@ const Profile: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-white">
       {/* Back to Home */}
       <div
-        className="p-4 flex items-center cursor-pointer"
+        className="p-4 flex items-center cursor-pointer lg:justify-start justify-center"
         onClick={handleBackToHome}
       >
         <FaArrowLeft className="mr-2" />
@@ -94,15 +88,19 @@ const Profile: React.FC = () => {
       </div>
 
       {/* Profile Content */}
-      <div className="flex-grow flex flex-col items-center">
+      <div className="flex-grow flex flex-col items-center px-4 lg:px-8">
         {/* Greeting */}
-        <h1 className="text-2xl font-bold mt-4">Hello, {userCred ? userCred.username : 'Guest'}!</h1>
+        <h1 className="text-xl lg:text-2xl font-bold mt-4 text-center">
+          Hello, {userCred ? userCred.username : "Guest"}!
+        </h1>
 
         {/* Address Compartment */}
-        <div className="w-full max-w-md flex items-center justify-center mt-2 p-3 bg-gray-100 rounded-lg">
-          <p className="text-gray-600">{userCred?.address}</p>
-          <button className="ml-2 text-gray-500 hover:text-gray-700" onClick={()=>{}}>
-            <FaEdit className="w-4 h-4" />
+        <div className="w-full max-w-md flex items-center justify-between mt-4 p-3 bg-gray-100 rounded-lg lg:justify-center">
+          <p className="text-gray-600 text-sm lg:text-base">
+            {userCred?.address || "No address available"}
+          </p>
+          <button className="ml-2 text-gray-500 hover:text-gray-700">
+            <FaEdit className="w-4 h-4 lg:w-5 lg:h-5" />
           </button>
         </div>
 
@@ -111,8 +109,10 @@ const Profile: React.FC = () => {
 
         {/* Order Summary */}
         <div className="w-full max-w-md mt-6">
-          <h2 className="text-lg font-semibold mb-2">Order Summary</h2>
-          {orders ?  (
+          <h2 className="text-lg lg:text-xl font-semibold mb-4 text-center lg:text-left">
+            Order Summary
+          </h2>
+          {orders ? (
             <ul className="space-y-4">
               {orders.map((item) => (
                 <li
@@ -120,23 +120,23 @@ const Profile: React.FC = () => {
                   className="flex justify-between items-center border-b pb-2"
                 >
                   <div>
-                    <p className="font-semibold">{item.order}</p>
-                    <p className="text-gray-600">Status : {item.status}</p>
+                    <p className="font-semibold text-sm lg:text-base">
+                      {item.order}
+                    </p>
+                    <p className="text-gray-600 text-xs lg:text-sm">
+                      Status: {item.status}
+                    </p>
                   </div>
-                  <p className="font-semibold">Rs.{item.cost}</p>
-                  
+                  <p className="font-semibold text-sm lg:text-base">
+                    Rs.{item.cost}
+                  </p>
                 </li>
-                
               ))}
             </ul>
-            // {/* Order Status */}
-        
           ) : (
-            <p className="text-gray-600">No orders.</p>
+            <p className="text-gray-600 text-center lg:text-left">No orders.</p>
           )}
         </div>
-
-        
       </div>
 
       {/* Footer */}

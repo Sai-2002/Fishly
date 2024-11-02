@@ -230,6 +230,7 @@ const Checkout: React.FC = () => {
           <div className="mt-4">
             <input
               type="date"
+              placeholder="dd-mm-yyyy"
               value={prebookingDate}
               onChange={(e) => setPrebookingDate(e.target.value)}
               className="w-full p-3 mb-3 border border-gray-300 rounded"
@@ -237,6 +238,7 @@ const Checkout: React.FC = () => {
             />
             <input
               type="time"
+              placeholder="hr:min"
               value={prebookingTime}
               onChange={(e) => setPrebookingTime(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded"
