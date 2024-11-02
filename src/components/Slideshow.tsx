@@ -7,9 +7,9 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Importing ico
 const Slideshow: React.FC = () => {
   // Sample images for the slideshow
   const images = [
+    "./images/image3.jpg",
     "./images/image1.jpg",
     "./images/image2.jpg",
-    "./images/image3.jpg",
   ];
 
   // State to track the current slide

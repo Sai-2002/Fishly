@@ -92,6 +92,7 @@ const Checkout: React.FC = () => {
     const forData = `${address.street} ${address.area} ${address.city} ${address.pincode} ${address.landmark}`.trim();
     
 
+
     try{
       const resp = await axios.post(
         `https://api.fishly.co.in/updateAddress/${uid}`,

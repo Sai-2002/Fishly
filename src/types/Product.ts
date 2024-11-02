@@ -12,5 +12,6 @@ export interface Product {
     servings: string;
     description: string;
     macros: string;
+    recipe:string;
   }
   

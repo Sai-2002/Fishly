@@ -53,9 +53,12 @@ const Products: React.FC<ProductsProps> = ({
     });
   };
 
-  const handleProductClick = (product: Product) => {
-    navigate("/product-details", { state: product });
-    onProductClick(product); // Call the onProductClick prop to handle click
+  const handleProductClick = async (product: Product) => {
+    
+    await onProductClick(product);
+    navigate("/product-details", { state: product, replace: true  });
+     // Call the onProductClick prop to handle click
+    console.log(product)
   };
 
   // Filter products based on search term
@@ -88,7 +91,7 @@ const Products: React.FC<ProductsProps> = ({
                   </h3>
                   <p className="text-sm text-black flex items-center">
                     <FaBalanceScale className="mr-2" />
-                    {product.quantity}
+                    {product.weight}
                   </p>
                   <p className="text-sm text-black flex items-center">
                     <FaUtensils className="mr-2" />

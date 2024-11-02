@@ -5,7 +5,6 @@ import Footer from "./Footer";
 import Navbar from "./NavBar";
 import { useCart } from "./CartContext";
 import { Product } from "../types/Product";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface ProdDetailsProps {
   products: Product[]; // List of all products
@@ -37,19 +36,6 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
 
   if (!product) return <div>Error: Product details are unavailable.</div>;
 
-  // Slideshow state and functions
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = [product.image]; // Assuming product.image contains the main image
-  const handlePrevImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
-  };
-  const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
-    );
-  };
 
   // Recipe toggle functionality
   const [isRecipeVisible, setRecipeVisible] = useState(false);
@@ -65,7 +51,6 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
         onSearchChange={() => {}}
         searchTerm={""}
         onSearchBoxClick={() => {}}
-    
       />
 
       <div className="flex-grow flex justify-center p-4">
@@ -73,11 +58,11 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
           <div className="flex flex-col md:flex-row justify-center items-center">
             <div className="w-full md:w-1/2 flex justify-center mb-4 md:mb-0 relative">
               <img
-                src={images[currentImageIndex]}
+                src={"data:image/jpeg;base64," + product.image}
                 alt={product.name}
                 className="w-48 h-48 object-cover rounded-lg"
               />
-              <button
+              {/* <button
                 onClick={handlePrevImage}
                 className="left-arrow absolute left-2 top-1/2 transform -translate-y-1/2"
               >
@@ -88,21 +73,21 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
                 className="right-arrow absolute right-2 top-1/2 transform -translate-y-1/2"
               >
                 <FaChevronRight />
-              </button>
+              </button> */}
             </div>
 
             <div className="w-full md:w-1/2 flex flex-col justify-center">
               <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
               <p className="text-lg mb-1">
-                <span className="font-semibold">Quantity:</span>{" "}
-                {product.quantity}
+                <span className="font-semibold">Weight:</span>{" "}
+                {product.weight}
               </p>
               <p className="text-lg mb-1">
                 <span className="font-semibold">Pieces:</span> {product.pieces}
               </p>
               <p className="text-lg mb-1">
                 <span className="font-semibold">Servings:</span>{" "}
-                {product.servings}
+                {product.servings} person
               </p>
               <p className="text-2xl font-semibold mb-2 text-[#22ccdd]">
                 <span className="font-semibold">Price:</span> ₹{product.price}
@@ -116,11 +101,14 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
                 className="text-blue-500 cursor-pointer"
                 onClick={toggleRecipe}
               >
-                Show Recipe
+                {isRecipeVisible ? "Hide Recipe" : "Show Recipe"}
               </p>
               {isRecipeVisible && (
                 <div className="recipe-content">
                   <p>{product.recipe}</p>
+
+                  {/* <p>IPOTHIKU POI SAMAI</p> */}
+
                 </div>
               )}
             </div>
