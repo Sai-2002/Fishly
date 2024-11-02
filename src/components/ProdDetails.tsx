@@ -98,7 +98,7 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
               <img
                 src={"data:image/jpeg;base64," + product.image}
                 alt={product.name}
-                className="w-48 h-48 object-cover rounded-lg"
+                className="w-64 h-48 object-cover rounded-lg"
               />
               {/* <button
                 onClick={handlePrevImage}
@@ -129,8 +129,7 @@ const ProdDetails: React.FC<ProdDetailsProps> = ({ products }) => {
               </p>
 
               <p className="text-lg mb-4">
-                <span className="font-semibold">Description:</span> This is a
-                detailed description of {product.name}.
+                <span className="font-semibold">Description:</span> {product.description}
               </p>
               <p className="text-2xl font-semibold mb-2 text-[#22ccdd]">
                 <span className="font-semibold">Price:</span> ₹{product.price}
