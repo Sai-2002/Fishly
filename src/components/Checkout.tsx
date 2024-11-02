@@ -5,6 +5,7 @@ import axios from "axios";
 
 const Checkout: React.FC = () => {
   const uid = sessionStorage.getItem("uid");
+
   const navigate = useNavigate();
   const cartContext = useContext(CartContext);
 
@@ -64,11 +65,13 @@ const Checkout: React.FC = () => {
     };
 
     fetchData();
-  }, [uid]);
+  }, );
 
   useEffect(() => {
     const formatted = `${address.street} ${address.area} ${address.city} ${address.pincode} ${address.landmark}`;
     setFormattedAddress(formatted.trim());
+    
+    console.log(formattedAddress)
 
   }, [address]);
 
@@ -80,15 +83,19 @@ const Checkout: React.FC = () => {
   }, [cartItems]);
 
 
-  const Adddata = {
-    address: formattedAddress
-  }
+  // const Adddata = {
+  //   address: formattedAddress
+  // }
 
   const handleAddress = async () => {
+    // console.log(Adddata)
+    const forData = `${address.street} ${address.area} ${address.city} ${address.pincode} ${address.landmark}`.trim();
+    
+
     try{
       const resp = await axios.post(
         `https://api.fishly.co.in/updateAddress/${uid}`,
-        Adddata,
+        {"address": forData},
         {
           headers: {
             "Content-Type": "application/json",
@@ -97,6 +104,11 @@ const Checkout: React.FC = () => {
       );
 
       console.log(resp.data);
+      if(resp.data.Result != "No user found."){
+        setIsAddress(true)
+      }
+
+      // setIsAddress(resp.data.Address)
     }
     catch(error) {
       console.error(error);
