@@ -58,6 +58,7 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
     const token = sessionStorage.getItem("token");
 
     if (!uid || !token) {
+      console.log(isLoggedIn)
       navigate("/login");
     }
 
@@ -136,35 +137,37 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
                   <img
                     src={"data:image/jpeg;base64," + item.image}
                     alt={item.name}
-                    className="w-24 h-24 object-cover mr-4"
+                    className="w-34 h-24 object-fill mr-4"
                   />
                   <div className="flex-grow">
                     <h2 className="text-lg font-semibold">{item.name}</h2>
+                    <p className="text-sm text-gray-600">
+                      Quantity: {item.weight}
+                    </p>
                     <div className="flex flex-col mt-2 space-y-2">
                       <div className="flex items-center space-x-2">
                         <button
-                          className="bg-gray-300 rounded px-2"
+                          className="hover:bg-slate-100 rounded px-2"
                           onClick={() => handleCountChange(item, false)}
                         >
                           -
                         </button>
                         <span className="font-bold">{item.count}</span>
                         <button
-                          className="bg-gray-300 rounded px-2"
+                          className="hover:bg-slate-100 rounded px-2"
                           onClick={() => handleCountChange(item, true)}
                         >
                           +
                         </button>
                       </div>
-                      <p className="text-sm text-gray-600">
-                        Quantity: {item.weight}
-                      </p>
                     </div>
                   </div>
                   <div className="text-right ml-4">
                     <p>
                       Price: <span className="font-bold">Rs. {item.price}</span>
                     </p>
+                    <div className="h-10"> </div>
+                    <div> </div>
                     <p>
                       Total:{" "}
                       <span className="font-bold">
@@ -172,7 +175,7 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
                       </span>
                     </p>
                     <button
-                      className="text-red-500 underline mt-2"
+                      className="text-red-500 mt-2"
                       onClick={() => removeFromCart(item._id)}
                     >
                       Remove
@@ -190,29 +193,18 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
           <div className="max-w-lg mx-auto">
             <div className="flex justify-end items-center mb-4">
               <p className="text-lg font-semibold">
-                Total Price: Rs. {totalPrice.toFixed(2)}
+                Subtotal : Rs. {totalPrice.toFixed(2)}
               </p>
             </div>
 
-            {isLoggedIn ? (
               <div className="flex justify-center">
                 <button
                   onClick={verifyToken} // Navigate to checkout
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors w-full"
                 >
                   Checkout
                 </button>
               </div>
-            ) : (
-              <div className="flex justify-center">
-                <button
-                  onClick={verifyToken} // Navigate to checkout
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Checkout
-                </button>
-              </div>
-            )}
           </div>
         </div>
       )}

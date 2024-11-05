@@ -77,10 +77,10 @@ const Profile: React.FC = () => {
   // }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col items-center bg-gray-100">
       {/* Back to Home */}
       <div
-        className="p-4 flex items-center cursor-pointer lg:justify-start justify-center"
+        className="w-full p-4 flex items-center cursor-pointer"
         onClick={handleBackToHome}
       >
         <FaArrowLeft className="mr-2" />
@@ -88,7 +88,7 @@ const Profile: React.FC = () => {
       </div>
 
       {/* Profile Content */}
-      <div className="flex-grow flex flex-col items-center px-4 lg:px-8">
+      <div className="flex-grow flex flex-col items-center px-4 lg:px-8 bg-white rounded-md">
         {/* Greeting */}
         <h1 className="text-xl lg:text-2xl font-bold mt-4 text-center">
           Hello, {userCred ? userCred.username : "Guest"}!
@@ -96,7 +96,7 @@ const Profile: React.FC = () => {
 
         {/* Address Compartment */}
         <div className="w-full max-w-md flex items-center justify-between mt-4 p-3 bg-gray-100 rounded-lg lg:justify-center">
-          <p className="text-gray-600 text-sm lg:text-base">
+          <p className="text-gray-700 text-sm lg:text-base">
             {userCred?.address || "No address available"}
           </p>
           <button className="ml-2 text-gray-500 hover:text-gray-700">
@@ -108,11 +108,11 @@ const Profile: React.FC = () => {
         <hr className="w-full max-w-md border-t border-gray-300 mt-4" />
 
         {/* Order Summary */}
-        <div className="w-full max-w-md mt-6">
-          <h2 className="text-lg lg:text-xl font-semibold mb-4 text-center lg:text-left">
+        <div className="w-full max-w-md mt-6 mb-4 pb-2">
+          <h2 className="text-lg lg:text-xl font-semibold mb-4 text-center">
             Order Summary
           </h2>
-          {orders ? (
+          {orders && orders.length > 0 ? (
             <ul className="space-y-4">
               {orders.map((item) => (
                 <li
@@ -134,7 +134,12 @@ const Profile: React.FC = () => {
               ))}
             </ul>
           ) : (
-            <p className="text-gray-600 text-center lg:text-left">No orders.</p>
+            <div className="flex flex-col items-center">
+              <p className="text-gray-600 text-center pb-3">No orders yet.</p>
+              <button className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors w-full">
+                Shop now
+              </button>
+            </div>
           )}
         </div>
       </div>

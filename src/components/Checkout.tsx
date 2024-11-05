@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "./CartContext";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css'
 import axios from "axios";
 
 const Checkout: React.FC = () => {
@@ -21,8 +23,9 @@ const Checkout: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
   const [productsSummary, setProductsSummary] = useState<string>("");
   const [selectedService, setSelectedService] = useState("Onsite cut");
-  const [prebookingDate, setPrebookingDate] = useState("");
-  const [prebookingTime, setPrebookingTime] = useState("");
+  const [prebookingDate, setPrebookingDate] = useState<Date|null>(null);
+
+  const minDate = new Date(2024, 10, 24);
 
   if (!cartContext) {
     return <div>Error: Cart context is unavailable.</div>;
@@ -127,7 +130,7 @@ const Checkout: React.FC = () => {
       order: productsSummary,
       cuttingMethod: cuttingMethod,
       paymentMethod: paymentMethod,
-      cost: totalPrice,
+      cost: totalPrice/2,
       transaction_id: "",
       status: "Order Placed",
     }
@@ -157,7 +160,7 @@ const Checkout: React.FC = () => {
   // Cutting method display logic
   const cuttingMethod =
     selectedService === "Onsite cut" || selectedService === "Precut"
-      ? `${selectedService} (Date: ${prebookingDate}, Time: ${prebookingTime})`
+      ? `${selectedService} (Date: ${prebookingDate},`
       : selectedService;
 
   return (
@@ -168,9 +171,11 @@ const Checkout: React.FC = () => {
 
       {/* Order Summary Section */}
       <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-xl font-semibold mb-4 text-center">
-          Order Summary
-        </h2>
+        <div className="bg-gradient-to-r from-[#81f8bb] to-[#22ccdd] pt-4 pb-1 rounded-lg mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-center">
+            Order Summary
+          </h2>
+        </div>
         {cartItems.length === 0 ? (
           <p className="text-center">Your cart is empty.</p>
         ) : (
@@ -195,15 +200,23 @@ const Checkout: React.FC = () => {
           </ul>
         )}
         <div className="max-w-lg mx-auto">
-          <div className="flex justify-end items-center mb-4">
-            <p className="text-lg font-semibold">
-              Total Price: Rs.{totalPrice.toFixed(2)}
+          <div className="flex flex-col items-end mb-4">
+            <div className="flex items-center">
+              <p className="text-lg font-semibold mr-2 line-through">
+                Total Price: Rs.
+                <span className="">{totalPrice.toFixed(2)}</span>
+              </p>
+              <span className="text-blue-400">50% off</span>
+            </div>
+            <p className="text-lg">
+              <span className="font-bold">Discounted Price: </span> Rs.
+              {(totalPrice / 2).toFixed(2)}
             </p>
           </div>
         </div>
         <button
           onClick={handleEditCart}
-          className="mt-4 w-full py-2 rounded bg-gradient-to-r from-[#81f8bb] to-[#22ccdd] text-white font-semibold"
+          className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors w-full"
         >
           Edit Cart
         </button>
@@ -214,6 +227,7 @@ const Checkout: React.FC = () => {
         <h2 className="text-lg font-semibold mb-4">
           Service Option for Pre-Booking
         </h2>
+
         <div className="flex items-center mb-4">
           <input
             type="radio"
@@ -226,27 +240,26 @@ const Checkout: React.FC = () => {
           />
           <label htmlFor="onsiteCut">Onsite cut</label>
         </div>
+
         {selectedService === "Onsite cut" && (
-          <div className="mt-4">
-            <input
-              type="date"
-              placeholder="dd-mm-yyyy"
-              value={prebookingDate}
-              onChange={(e) => setPrebookingDate(e.target.value)}
-              className="w-full p-3 mb-3 border border-gray-300 rounded"
-              required
-            />
-            <input
-              type="time"
-              placeholder="hr:min"
-              value={prebookingTime}
-              onChange={(e) => setPrebookingTime(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded"
-              required
-            />
+          <div className="mt-4 space-y-2">
+            <div className="flex space-x-4">
+              <DatePicker
+                selected={prebookingDate}
+                onChange={(date) => setPrebookingDate(date)}
+                minDate={minDate} // Disable dates before Nov 24, 2024
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15} // Set time intervals to 15 minutes
+                dateFormat="MMMM d, yyyy h:mm aa"
+                placeholderText="Select a date"
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
           </div>
         )}
-        <div className="flex items-center mb-4">
+
+        <div className="flex items-center mb-4 pt-4">
           <input
             type="radio"
             id="precut"
@@ -258,22 +271,22 @@ const Checkout: React.FC = () => {
           />
           <label htmlFor="precut">Precut</label>
         </div>
+
         {selectedService === "Precut" && (
-          <div className="mt-4">
-            <input
-              type="date"
-              value={prebookingDate}
-              onChange={(e) => setPrebookingDate(e.target.value)}
-              className="w-full p-3 mb-3 border border-gray-300 rounded"
-              required
-            />
-            <input
-              type="time"
-              value={prebookingTime}
-              onChange={(e) => setPrebookingTime(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded"
-              required
-            />
+          <div className="mt-4 space-y-2">
+            <div className="flex space-x-4">
+              <DatePicker
+                selected={prebookingDate}
+                onChange={(date) => setPrebookingDate(date)}
+                minDate={minDate} // Disable dates before Nov 24, 2024
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15} // Set time intervals to 15 minutes
+                dateFormat="MMMM d, yyyy h:mm aa"
+                placeholderText="Select a date"
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
           </div>
         )}
       </div>
