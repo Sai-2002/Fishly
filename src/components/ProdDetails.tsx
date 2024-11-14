@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Footer from "./Footer";
 import Navbar from "./NavBar";
+import Footer from "./Footer";
 import { useCart } from "./CartContext";
-import { Product } from "../types/Product";
 
-interface ProdDetailsProps {
-  products: Product[];
-}
-
-const ProdDetails: React.FC<ProdDetailsProps> = () => {
+const ProdDetails: React.FC = () => {
   const location = useLocation();
   const product = location.state;
-  const { totalCount, updateCartItem, removeFromCart } = useCart();
+  const { updateCartItem, removeFromCart, totalCount } = useCart();
   const [count, setCount] = useState(0);
   const [istoggle, setIsToggle] = useState(false);
 
@@ -21,11 +16,35 @@ const ProdDetails: React.FC<ProdDetailsProps> = () => {
     { id: 2, name: "Fry", description: product.fry },
     { id: 3, name: "Barbeque", description: product.barbeque },
   ];
-
   const [popupContent, setPopupContent] = useState<{
     name: string;
     description: string;
   } | null>(null);
+
+  useEffect(() => {
+    // Scroll to the top when the component is loaded
+    window.scrollTo(0, 0);
+
+    // Initialize count from session storage
+    const storedCount = sessionStorage.getItem(`count_${product._id}`);
+    setCount(storedCount ? parseInt(storedCount, 10) : 0);
+  }, [product]);
+
+  const handleCountChange = (increment: boolean) => {
+    setCount((prevCount) => {
+      const newCount = increment ? prevCount + 1 : Math.max(prevCount - 1, 0);
+
+      // Update session storage
+      sessionStorage.setItem(`count_${product._id}`, newCount.toString());
+
+      if (newCount > 0) {
+        updateCartItem(product, newCount);
+      } else {
+        removeFromCart(product._id);
+      }
+      return newCount;
+    });
+  };
 
   const openPopup = (content: { name: string; description: string }) => {
     setPopupContent(content);
@@ -35,22 +54,6 @@ const ProdDetails: React.FC<ProdDetailsProps> = () => {
   const closePopup = () => {
     setIsToggle(false);
     setPopupContent(null);
-  };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const handleCountChange = (increment: boolean) => {
-    setCount((prevCount) => {
-      const newCount = increment ? prevCount + 1 : Math.max(prevCount - 1, 0);
-      if (newCount > 0) {
-        updateCartItem(product, newCount);
-      } else {
-        removeFromCart(product.id);
-      }
-      return newCount;
-    });
   };
 
   if (!product) return <div>Error: Product details are unavailable.</div>;
@@ -93,7 +96,7 @@ const ProdDetails: React.FC<ProdDetailsProps> = () => {
                   className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors w-full"
                   onClick={() => handleCountChange(true)}
                 >
-                  Add to Bag
+                  Add to Cart
                 </button>
               ) : (
                 <div className="flex items-center mb-4 sm:mb-6">
@@ -117,7 +120,7 @@ const ProdDetails: React.FC<ProdDetailsProps> = () => {
               )}
             </div>
 
-            {/* Tabs for Details, Features, Shipping */}
+            {/* Recipe Tabs */}
             <div className="flex flex-wrap mt-6 space-x-3 text-sm font-medium text-gray-600">
               <span>See Recipe for</span>
               {buttonData.map((button) => (
@@ -133,11 +136,7 @@ const ProdDetails: React.FC<ProdDetailsProps> = () => {
               {/* Popup Content */}
               {istoggle && popupContent && (
                 <div className="fixed inset-0 flex items-start justify-center bg-black bg-opacity-50 z-50">
-                  {" "}
-                  {/* Increased z-index */}
                   <div className="relative bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-lg sm:max-w-xl mt-16">
-                    {" "}
-                    {/* Adjusted mt value */}
                     <h2 className="text-lg font-bold mb-2">
                       {popupContent.name}
                     </h2>

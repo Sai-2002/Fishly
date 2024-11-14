@@ -6,10 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { Product } from "../types/Product";
 
 interface ProductsProps {
-  products: Product[]; // Include products as a prop
+  products: Product[];
   updateTotalCount: (counts: number[]) => void;
   searchTerm: string;
-  onProductClick: (product: Product) => void; // Add onProductClick prop
+  onProductClick: (product: Product) => void;
 }
 
 const Products: React.FC<ProductsProps> = ({
@@ -18,14 +18,27 @@ const Products: React.FC<ProductsProps> = ({
   searchTerm,
   onProductClick,
 }) => {
-  const { updateCartItem, removeFromCart } = useCart();
+  const { updateCartItem, removeFromCart, cartItems } = useCart();
   const [counts, setCounts] = useState<number[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Initialize counts when products change
-    setCounts(Array(products.length).fill(0));
+    // Initialize counts from session storage or the cart context
+    const initialCounts = products.map((product) => {
+      const storedCount = sessionStorage.getItem(`count_${product._id}`);
+      return storedCount ? parseInt(storedCount, 10) : 0;
+    });
+    setCounts(initialCounts);
   }, [products]);
+
+  useEffect(() => {
+    // Sync counts with the cartItems when they change
+    const updatedCounts = products.map((product) => {
+      const cartItem = cartItems.find((item) => item._id === product._id);
+      return cartItem ? cartItem.count : 0; // if the product is in the cart, update the count
+    });
+    setCounts(updatedCounts);
+  }, [cartItems, products]);
 
   const handleCountChange = (
     product: Product,
@@ -43,6 +56,10 @@ const Products: React.FC<ProductsProps> = ({
       updateTotalCount(newCounts);
       const currentCount = newCounts[index];
 
+      // Update session storage
+      sessionStorage.setItem(`count_${product._id}`, currentCount.toString());
+
+      // Update cart item or remove if count is zero
       if (currentCount > 0) {
         updateCartItem({ ...product, count: currentCount }, currentCount);
       } else {
@@ -54,11 +71,8 @@ const Products: React.FC<ProductsProps> = ({
   };
 
   const handleProductClick = async (product: Product) => {
-    
     await onProductClick(product);
-    navigate("/product-details", { state: product, replace: true  });
-     // Call the onProductClick prop to handle click
-    console.log(product)
+    navigate("/product-details", { state: product, replace: true });
   };
 
   // Filter products based on search term
@@ -86,26 +100,19 @@ const Products: React.FC<ProductsProps> = ({
               />
               <div className="p-4 w-full flex justify-between items-start">
                 <div className="text-left">
-                  <h3 className="text-lg text-black font-medium">
-                    {product.name}
-                  </h3>
-                  <p className="text-sm text-black flex items-center">
-                    <FaBalanceScale className="mr-2" />
-                    {product.weight} g
+                  <h3 className="text-lg font-medium">{product.name}</h3>
+                  <p className="text-sm flex items-center">
+                    <FaBalanceScale className="mr-2" /> {product.weight} g
                   </p>
-                  <p className="text-sm text-black flex items-center">
-                    <FaUtensils className="mr-2" />
-                    {product.pieces}
+                  <p className="text-sm flex items-center">
+                    <FaUtensils className="mr-2" /> {product.pieces}
                   </p>
-                  <p className="text-sm text-black flex items-center">
-                    <BiDish className="mr-2" />
-                    {product.servings} person
+                  <p className="text-sm flex items-center">
+                    <BiDish className="mr-2" /> {product.servings} person
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg text-black font-semibold mb-2">
-                    ₹{product.price}
-                  </p>
+                  <p className="text-lg font-semibold mb-2">₹{product.price}</p>
                   <div className="flex items-center">
                     {counts[index] === 0 ? (
                       <button
@@ -120,7 +127,7 @@ const Products: React.FC<ProductsProps> = ({
                     ) : (
                       <div className="flex items-center border bg-white rounded-md px-2 py-1">
                         <button
-                          className="text-black font-bold rounded-md w-8 h-8 flex items-center justify-center"
+                          className="text-black font-bold w-8 h-8 flex items-center justify-center"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleCountChange(product, index, false);
@@ -130,7 +137,7 @@ const Products: React.FC<ProductsProps> = ({
                         </button>
                         <span className="mx-2 font-bold">{counts[index]}</span>
                         <button
-                          className="text-black font-bold rounded-md w-8 h-8 flex items-center justify-center"
+                          className="text-black font-bold w-8 h-8 flex items-center justify-center"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleCountChange(product, index, true);

@@ -71,8 +71,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Remove item from cart
+  // In CartContext.tsx
+
   const removeFromCart = (id: string) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item._id !== id));
+    setCartItems((prevItems) => {
+      const updatedItems = prevItems.filter((item) => item._id !== id);
+
+      // Reset the count for the removed product in session storage
+      sessionStorage.setItem(`count_${id}`, "0");
+
+      return updatedItems;
+    });
   };
 
   // Clear cart items from state and sessionStorage

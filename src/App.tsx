@@ -40,63 +40,6 @@ const App: React.FC = () => {
     fetchData();
   }, []);
 
-  // const products: Product[] = [
-  //   {
-  //     id: "1",
-  //     name: "CATLA",
-  //     image: "./images/catla.jpg",
-  //     quantity: "500g",
-  //     pieces: "10 pieces",
-  //     servings: "5 servings",
-  //     price: 10.0,
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "MURREL",
-  //     image: "./images/murrel.jpg",
-  //     quantity: "300g",
-  //     pieces: "5 pieces",
-  //     servings: "3 servings",
-  //     price: 8.0,
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "ROHU",
-  //     image: "./images/rohu.jpg",
-  //     quantity: "1kg",
-  //     pieces: "20 pieces",
-  //     servings: "10 servings",
-  //     price: 15.0,
-  //   },
-  //   {
-  //     id: "4",
-  //     name: "ROOPCHAND",
-  //     image: "./images/roopchand.jpg",
-  //     quantity: "200g",
-  //     pieces: "4 pieces",
-  //     servings: "2 servings",
-  //     price: 6.0,
-  //   },
-  //   {
-  //     id: "5",
-  //     name: "TILAPIA",
-  //     image: "./images/tilapia.jpg",
-  //     quantity: "300g",
-  //     pieces: "5 pieces",
-  //     servings: "3 servings",
-  //     price: 8.0,
-  //   },
-  //   {
-  //     id: "6",
-  //     name: "PRAWNS",
-  //     image: "./images/prawns.jpg",
-  //     quantity: "1kg",
-  //     pieces: "20 pieces",
-  //     servings: "10 servings",
-  //     price: 15.0,
-  //   },
-  // ];
-
   const updateTotalCount = (counts: number[]) => {
     const total = counts.reduce((acc, count) => acc + count, 0);
     setTotalCount(total);

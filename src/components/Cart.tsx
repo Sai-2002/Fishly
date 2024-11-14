@@ -25,6 +25,7 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
   const { cartItems, updateCartItem, removeFromCart } = cartContext;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     // Update the total count whenever cartItems change
     const counts = cartItems.map((item) => item.count);
     updateTotalCount(counts);
@@ -32,11 +33,21 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
 
   const handleCountChange = (item: CartItem, increment: boolean) => {
     const currentCount = item.count;
-    const newCount = increment
-      ? currentCount + 1
-      : Math.max(currentCount - 1, 1);
 
-    updateCartItem({ ...item, count: newCount }, newCount);
+    if (increment) {
+      // Increment count
+      const newCount = currentCount + 1;
+      updateCartItem({ ...item, count: newCount }, newCount);
+    } else {
+      // Decrement count or remove item if count is 1
+      if (currentCount === 1) {
+        // Remove item from cart if count is 1
+        removeFromCart(item._id);
+      } else {
+        const newCount = currentCount - 1;
+        updateCartItem({ ...item, count: newCount }, newCount);
+      }
+    }
   };
 
   const totalPrice = cartItems.reduce((acc, item) => {
@@ -58,7 +69,7 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
     const token = sessionStorage.getItem("token");
 
     if (!uid || !token) {
-      console.log(isLoggedIn)
+      console.log(isLoggedIn);
       navigate("/login");
     }
 
@@ -197,14 +208,14 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
               </p>
             </div>
 
-              <div className="flex justify-center">
-                <button
-                  onClick={verifyToken} // Navigate to checkout
-                  className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors w-full"
-                >
-                  Checkout
-                </button>
-              </div>
+            <div className="flex justify-center">
+              <button
+                onClick={verifyToken} // Navigate to checkout
+                className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors w-full"
+              >
+                Checkout
+              </button>
+            </div>
           </div>
         </div>
       )}

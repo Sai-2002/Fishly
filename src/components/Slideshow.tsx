@@ -1,19 +1,25 @@
-import React, { useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Importing icons
 
 const Slideshow: React.FC = () => {
-  // Sample images for the slideshow
-  const images = [
-    "./images/image3.jpg",
-    "./images/image1.jpg",
-    "./images/image2.jpg",
+  // State to track the screen width for responsive image selection
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Sample images for the mobile and desktop layouts
+  const mobileImages = [
+    "./images/desktop_image1.jpg",
+    "./images/desktop_image2.jpg",
+    "./images/desktop_image3.jpg",
   ];
 
-  // State to track the current slide
-  // const [currentSlide, setCurrentSlide] = useState(0);
+  const desktopImages = [
+    "./images/mobile_image1.jpg",
+    "./images/mobile_image2.jpg",
+    "./images/mobile_image3.jpg",
+  ];
 
   // Slider settings
   const settings = {
@@ -25,9 +31,6 @@ const Slideshow: React.FC = () => {
     autoplay: true,
     autoplaySpeed: 4000, // Set to 4 seconds
     cssEase: "ease-in-out", // Smooth transition
-    // beforeChange: (_current: number, next: number) => {
-    //   setCurrentSlide(next); // Update the current slide state
-    // },
   };
 
   // Create a reference to the slider
@@ -43,23 +46,38 @@ const Slideshow: React.FC = () => {
     sliderRef.current?.slickNext();
   };
 
+  // Set up a listener to detect screen width changes
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Set to true for mobile (or adjust based on your breakpoints)
+    };
+
+    // Add resize listener
+    window.addEventListener("resize", handleResize);
+
+    // Check initial window size
+    handleResize();
+
+    // Cleanup listener on component unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className="relative w-full mx-auto px-4 pt-6">
       {/* Aspect Ratio Wrapper */}
-      <div className="relative w-full pb-[25%]">
-        {" "}
-        {/* 4:1 aspect ratio */}
+      <div className="relative aspect-[4/2] md:aspect-[4/1]">
+        {/* 4:2 for mobile, 4:1 for desktop */}
         <Slider
           ref={sliderRef}
           {...settings}
           className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-lg"
         >
-          {images.map((image, index) => (
+          {(isMobile ? mobileImages : desktopImages).map((image, index) => (
             <div key={index} className="h-full">
               <img
                 src={image}
                 alt={`Slide ${index + 1}`}
-                className="w-full h-full object-cover rounded-lg transition-all duration-700 ease-in-out" // Smooth image transition
+                className="w-full h-full object-cover object-center md:object-fill md:scale-100 scale-125 transition-all duration-700 ease-in-out"
               />
             </div>
           ))}
@@ -79,18 +97,6 @@ const Slideshow: React.FC = () => {
       >
         <FaChevronRight className="text-lg" />
       </button>
-
-      {/* Bullet Points */}
-      {/* <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {images.map((_, index) => (
-          <div
-            key={index}
-            className={`w-3 h-3 rounded-full bg-gray-300 transition-all duration-300 ${
-              currentSlide === index ? "w-6 h-6 bg-black" : ""
-            }`} // Enlarges and changes color to black when active
-          />
-        ))}
-      </div> */}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 // CartItem interface
 export interface CartItem {
+
     _id: string; // Ensure the type matches your product structure
     name: string;
     price: number;
