@@ -11,14 +11,14 @@ const Slideshow: React.FC = () => {
   // Sample images for the mobile and desktop layouts
   const mobileImages = [
     "./images/desktop_image1.jpg",
-    "./images/desktop_image2.jpg",
     "./images/desktop_image3.jpg",
+    "./images/desktop_image2.jpg",
   ];
 
   const desktopImages = [
+    "./images/mobile_image3.jpg",
     "./images/mobile_image1.jpg",
     "./images/mobile_image2.jpg",
-    "./images/mobile_image3.jpg",
   ];
 
   // Slider settings
@@ -29,7 +29,7 @@ const Slideshow: React.FC = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 4000, // Set to 4 seconds
+    autoplaySpeed: 3000, // Set to 3 seconds
     cssEase: "ease-in-out", // Smooth transition
   };
 
@@ -65,8 +65,8 @@ const Slideshow: React.FC = () => {
   return (
     <div className="relative w-full mx-auto px-4 pt-6">
       {/* Aspect Ratio Wrapper */}
-      <div className="relative aspect-[4/2] md:aspect-[4/1]">
-        {/* 4:2 for mobile, 4:1 for desktop */}
+      <div className={`relative ${isMobile ? "aspect-[2/1]" : "aspect-[4/1]"}`}>
+        {/* 2:1 for mobile, 4:1 for desktop */}
         <Slider
           ref={sliderRef}
           {...settings}
@@ -77,7 +77,7 @@ const Slideshow: React.FC = () => {
               <img
                 src={image}
                 alt={`Slide ${index + 1}`}
-                className="w-full h-full object-cover object-center md:object-fill md:scale-100 scale-125 transition-all duration-700 ease-in-out"
+                className="w-full h-full object-cover transition-all duration-700 ease-in-out"
               />
             </div>
           ))}

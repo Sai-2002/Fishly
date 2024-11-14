@@ -49,6 +49,8 @@ const App: React.FC = () => {
     setSearchTerm(term);
   };
 
+  console.log(totalCount);
+
   return (
     <CartProvider>
       <Router>
@@ -57,7 +59,7 @@ const App: React.FC = () => {
             path="/"
             element={
               <Home
-                totalCount={totalCount}
+                //totalCount={totalCount}
                 onSearchChange={handleSearchChange}
                 updateTotalCount={updateTotalCount}
                 searchTerm={searchTerm}
@@ -67,7 +69,7 @@ const App: React.FC = () => {
           />
           <Route
             path="/product-details"
-            element={<ProdDetails products={products} />} // Pass products directly to ProdDetails
+            element={<ProdDetails />} // Pass products directly to ProdDetails
           />
           <Route
             path="/cart"

@@ -7,7 +7,7 @@ import { useCart } from "./CartContext";
 const ProdDetails: React.FC = () => {
   const location = useLocation();
   const product = location.state;
-  const { updateCartItem, removeFromCart, totalCount } = useCart();
+  const { cartItems, updateCartItem, removeFromCart, totalCount } = useCart();
   const [count, setCount] = useState(0);
   const [istoggle, setIsToggle] = useState(false);
 
@@ -18,17 +18,29 @@ const ProdDetails: React.FC = () => {
   ];
   const [popupContent, setPopupContent] = useState<{
     name: string;
-    description: string;
+    description: string[];
   } | null>(null);
 
+  // Initialize count from session storage and synchronize with cart state
   useEffect(() => {
-    // Scroll to the top when the component is loaded
     window.scrollTo(0, 0);
 
-    // Initialize count from session storage
     const storedCount = sessionStorage.getItem(`count_${product._id}`);
-    setCount(storedCount ? parseInt(storedCount, 10) : 0);
+    const initialCount = storedCount ? parseInt(storedCount, 10) : 0;
+    setCount(initialCount);
   }, [product]);
+
+  // Synchronize count with cart items when they change
+  useEffect(() => {
+    const cartItem = cartItems.find((item) => item._id === product._id);
+    if (cartItem) {
+      setCount(cartItem.count);
+      sessionStorage.setItem(`count_${product._id}`, cartItem.count.toString());
+    } else {
+      setCount(0);
+      sessionStorage.removeItem(`count_${product._id}`);
+    }
+  }, [cartItems, product._id]);
 
   const handleCountChange = (increment: boolean) => {
     setCount((prevCount) => {
@@ -37,17 +49,24 @@ const ProdDetails: React.FC = () => {
       // Update session storage
       sessionStorage.setItem(`count_${product._id}`, newCount.toString());
 
+      // Update cart context
       if (newCount > 0) {
         updateCartItem(product, newCount);
       } else {
         removeFromCart(product._id);
       }
+
       return newCount;
     });
   };
 
   const openPopup = (content: { name: string; description: string }) => {
-    setPopupContent(content);
+    const bulletPoints = content.description
+      .split(".")
+      .map((sentence) => sentence.trim())
+      .filter((sentence) => sentence !== "");
+
+    setPopupContent({ name: content.name, description: bulletPoints });
     setIsToggle(true);
   };
 
@@ -133,14 +152,19 @@ const ProdDetails: React.FC = () => {
                 </span>
               ))}
 
-              {/* Popup Content */}
               {istoggle && popupContent && (
                 <div className="fixed inset-0 flex items-start justify-center bg-black bg-opacity-50 z-50">
                   <div className="relative bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-lg sm:max-w-xl mt-16">
                     <h2 className="text-lg font-bold mb-2">
                       {popupContent.name}
                     </h2>
-                    <p className="text-gray-600">{popupContent.description}</p>
+                    <ul className="list-disc list-inside text-gray-600">
+                      {popupContent.description.map((point, index) => (
+                        <li key={index} className="mb-1">
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
                     <button
                       onClick={closePopup}
                       className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
