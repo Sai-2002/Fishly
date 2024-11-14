@@ -36,7 +36,6 @@ const Profile: React.FC = () => {
     landmark: "",
   });
   const [isFormValid, setIsFormValid] = useState(false);
-  const [fullAddress, setFullAddress] = useState<string>(""); // New state to store concatenated address
 
   const handleBackToHome = () => {
     navigate("/");
@@ -48,12 +47,17 @@ const Profile: React.FC = () => {
 
   const uid = sessionStorage.getItem("uid");
 
+  // sessionStorage.setItem("address", )
+
   const fetchData = async () => {
     try {
       const response = await axios.get(
         `https://api.fishly.co.in/getUserDetails/${uid}`
       );
       setUserCred(response.data);
+      // if(userCred?.address != ""){
+
+      // }
     } catch (error) {
       console.error(error);
     }
@@ -75,15 +79,12 @@ const Profile: React.FC = () => {
     getAllOrder();
   }, [uid]);
 
-  const newAddress = {
-    address: fullAddress,
-  };
 
-  const updateAdd = async () => {
+  const updateAdd = async (address: string) => {
     try {
       const resp = await axios.post(
         `https://api.fishly.co.in/updateAddress/${uid}`,
-        newAddress,
+        {address: address},
         {
           headers: {
             "Content-Type": "application/json",
@@ -120,16 +121,12 @@ const Profile: React.FC = () => {
     setIsFormValid(isValid);
   }, [addressFields]);
 
-  useEffect(() => {
-    updateAdd();
-  }, [fullAddress]);
-
   const handleSaveAddress = () => {
     // Concatenate address fields into a single string
     const { street, area, city, pincode, landmark } = addressFields;
     const concatenatedAddress =
       `${street} ${area} ${city} ${pincode} ${landmark}`.trim();
-    setFullAddress(concatenatedAddress); // Update the full address state
+    updateAdd(concatenatedAddress);
     setIsEditPopupVisible(false);
   };
 
