@@ -7,6 +7,8 @@ export interface Product {
   name: string;
   price: number;
   image: string;
+  image1: string;
+  image2: string;
   weight: string;
   pieces: string;
   servings: string;

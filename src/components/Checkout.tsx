@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "./CartContext";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 
 const Checkout: React.FC = () => {
@@ -23,7 +23,7 @@ const Checkout: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
   const [productsSummary, setProductsSummary] = useState<string>("");
   const [selectedService, setSelectedService] = useState("Onsite cut");
-  const [prebookingDate, setPrebookingDate] = useState<Date|null>(null);
+  const [prebookingDate, setPrebookingDate] = useState<Date | null>(null);
 
   const minDate = new Date(2024, 10, 24);
 
@@ -60,7 +60,6 @@ const Checkout: React.FC = () => {
         if (response.data != "") {
           setIsAddress(response.data.Address);
           setFormattedAddress(response.data.Address);
-          
         }
       } catch (error) {
         console.error("Error", error);
@@ -68,14 +67,13 @@ const Checkout: React.FC = () => {
     };
 
     fetchData();
-  }, );
+  });
 
   useEffect(() => {
     const formatted = `${address.street} ${address.area} ${address.city} ${address.pincode} ${address.landmark}`;
     setFormattedAddress(formatted.trim());
-    
-    console.log(formattedAddress)
 
+    console.log(formattedAddress);
   }, [address]);
 
   useEffect(() => {
@@ -85,21 +83,19 @@ const Checkout: React.FC = () => {
     setProductsSummary(summary);
   }, [cartItems]);
 
-
   // const Adddata = {
   //   address: formattedAddress
   // }
 
   const handleAddress = async () => {
     // console.log(Adddata)
-    const forData = `${address.street} ${address.area} ${address.city} ${address.pincode} ${address.landmark}`.trim();
-    
+    const forData =
+      `${address.street} ${address.area} ${address.city} ${address.pincode} ${address.landmark}`.trim();
 
-
-    try{
+    try {
       const resp = await axios.post(
         `https://api.fishly.co.in/updateAddress/${uid}`,
-        {"address": forData},
+        { address: forData },
         {
           headers: {
             "Content-Type": "application/json",
@@ -108,48 +104,48 @@ const Checkout: React.FC = () => {
       );
 
       console.log(resp.data);
-      if(resp.data.Result != "No user found."){
-        setIsAddress(true)
+      if (resp.data.Result != "No user found.") {
+        setIsAddress(true);
       }
 
       // setIsAddress(resp.data.Address)
-    }
-    catch(error) {
+    } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const buttonText =
     paymentMethod === "Cash on Delivery" ? "Place Order" : "Coming Soon";
 
-
-  const placeOrder = async() => {
+  const placeOrder = async () => {
     const data = {
       customer_id: uid,
       address: formattedAddress,
       order: productsSummary,
       cuttingMethod: cuttingMethod,
       paymentMethod: paymentMethod,
-      cost: totalPrice/2,
+      cost: totalPrice / 2,
       transaction_id: "",
       status: "Order Placed",
-    }
+    };
 
     try {
-      const response = await axios.post("https://api.fishly.co.in/addOrder", data, {
-        headers: {
-          "Content-Type": "application/json"
+      const response = await axios.post(
+        "https://api.fishly.co.in/addOrder",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
 
       alert(response.data.Success);
-      navigate("/")
-    } catch (error) {
-      
-    }
+      navigate("/");
+    } catch (error) {}
 
     console.log(data);
-  }
+  };
 
   // const isAddressComplete =
   //   address.street.trim() &&
@@ -206,11 +202,11 @@ const Checkout: React.FC = () => {
                 Total Price: Rs.
                 <span className="">{totalPrice.toFixed(2)}</span>
               </p>
-              <span className="text-blue-400">50% off</span>
+              <span className="text-blue-400">30% off</span>
             </div>
             <p className="text-lg">
               <span className="font-bold">Discounted Price: </span> Rs.
-              {(totalPrice / 2).toFixed(2)}
+              {(totalPrice - totalPrice * 0.3).toFixed(2)}
             </p>
           </div>
         </div>

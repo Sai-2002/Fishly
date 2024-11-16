@@ -25,7 +25,7 @@ const ProdDetails: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    const storedCount = sessionStorage.getItem(`count_${product._id}`);
+    const storedCount = sessionStorage.getItem("count_${product._id}");
     const initialCount = storedCount ? parseInt(storedCount, 10) : 0;
     setCount(initialCount);
   }, [product]);
@@ -35,10 +35,10 @@ const ProdDetails: React.FC = () => {
     const cartItem = cartItems.find((item) => item._id === product._id);
     if (cartItem) {
       setCount(cartItem.count);
-      sessionStorage.setItem(`count_${product._id}`, cartItem.count.toString());
+      sessionStorage.setItem("count_${product._id}", cartItem.count.toString());
     } else {
       setCount(0);
-      sessionStorage.removeItem(`count_${product._id}`);
+      sessionStorage.removeItem("count_${product._id}");
     }
   }, [cartItems, product._id]);
 
@@ -47,7 +47,7 @@ const ProdDetails: React.FC = () => {
       const newCount = increment ? prevCount + 1 : Math.max(prevCount - 1, 0);
 
       // Update session storage
-      sessionStorage.setItem(`count_${product._id}`, newCount.toString());
+      sessionStorage.setItem("count_${product._id}", newCount.toString());
 
       // Update cart context
       if (newCount > 0) {

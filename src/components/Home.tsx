@@ -7,7 +7,8 @@ import WhyFishly from "./WhyFishly";
 import Footer from "./Footer";
 import Products from "./Products";
 import { Product } from "../types/Product";
-import { CartContext } from "./CartContext"; // Import CartContext
+import { CartContext } from "./CartContext";
+import ComingSoon from "./ComingSoon"; // Import CartContext
 
 interface HomeProps {
   onSearchChange: (term: string) => void;
@@ -67,6 +68,7 @@ const Home: React.FC<HomeProps> = ({
           onProductClick={handleProductClick}
         />
       </div>
+      <ComingSoon />
       <Footer />
     </div>
   );

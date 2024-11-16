@@ -6,42 +6,45 @@ const features = [
     title: "Alive at your Doorstep",
     imgSrc: "./images/alive_fish.jpg",
     altText: "Alive at your Doorstep",
-    description: "We deliver fresh, live fish right to your doorstep.",
+    description: "We deliver real freshness, alive fishes at your doorstep.",
   },
   {
     id: 2,
     title: "24x7 Alive fishes",
     imgSrc: "./images/24x7_fish.jpg",
     altText: "24x7 Alive fishes",
-    description: "Enjoy live fishes available 24/7 for your convenience.",
+    description: "Skip the morning rush, we deliver 24/7.",
   },
   {
     id: 3,
     title: "No preservatives or frozen",
     imgSrc: "./images/no_preservatives.jpg",
     altText: "No preservatives or frozen",
-    description: "Our fish are never frozen or preserved, always fresh.",
+    description:
+      "You get fish as fresh as nature intended with no freezing or preservatives.",
   },
   {
     id: 4,
     title: "QC by customer",
     imgSrc: "./images/qc_customer.jpg",
     altText: "QC by customer",
-    description: "You can check the quality yourself before purchase.",
+    description:
+      "You can personally inspect your fish at delivery to guarantee it's freshness.",
   },
   {
     id: 5,
     title: "On-site cut at your place",
     imgSrc: "./images/on_site_cut.jpg",
     altText: "On-site cut in your kitchen",
-    description: "Our team will cut the fish at your location as you prefer.",
+    description:
+      "On site cleaning and cutting at customer's choosen location with no mess or hassle.",
   },
   {
     id: 6,
     title: "Pre cut with personalised video",
     imgSrc: "./images/pre_cut_video.jpg",
     altText: "Pre cut with personalised video",
-    description: "Get a personalised video of the pre-cut process.",
+    description: "Personalized video of your fish was freshly caught and cut.",
   },
 ];
 
