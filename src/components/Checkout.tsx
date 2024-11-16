@@ -124,7 +124,7 @@ const Checkout: React.FC = () => {
       order: productsSummary,
       cuttingMethod: cuttingMethod,
       paymentMethod: paymentMethod,
-      cost: totalPrice / 2,
+      cost: totalPrice - totalPrice * 0.3,
       transaction_id: "",
       status: "Order Placed",
     };
