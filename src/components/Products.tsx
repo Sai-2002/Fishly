@@ -24,10 +24,15 @@ const Products: React.FC<ProductsProps> = ({
 
   useEffect(() => {
     // Initialize counts from session storage or the cart context
+
+    if (products.length === 0) return;
+
     const initialCounts = products.map((product) => {
       const storedCount = sessionStorage.getItem(`count_${product._id}`);
-      return storedCount ? parseInt(storedCount, 10) : 0;
+      const count = storedCount ? parseInt(storedCount, 10) : 0;
+      return isNaN(count) ? 0 : count;
     });
+    console.log("Initial Counts "+ initialCounts)
     setCounts(initialCounts);
   }, [products]);
 
@@ -37,6 +42,7 @@ const Products: React.FC<ProductsProps> = ({
       const cartItem = cartItems.find((item) => item._id === product._id);
       return cartItem ? cartItem.count : 0; // if the product is in the cart, update the count
     });
+    console.log("Updated counts:", updatedCounts);
     setCounts(updatedCounts);
   }, [cartItems, products]);
 
@@ -45,6 +51,8 @@ const Products: React.FC<ProductsProps> = ({
     index: number,
     increment: boolean
   ) => {
+    if (index < 0 || index >= counts.length) return; // Avoid out-of-bounds errors
+
     setCounts((prev) => {
       const newCounts = [...prev];
       if (increment) {
@@ -53,7 +61,7 @@ const Products: React.FC<ProductsProps> = ({
         newCounts[index] -= 1;
       }
 
-      updateTotalCount(newCounts);
+      updateTotalCount(newCounts); // Make sure this function works correctly
       const currentCount = newCounts[index];
 
       // Update session storage
@@ -69,6 +77,7 @@ const Products: React.FC<ProductsProps> = ({
       return newCounts;
     });
   };
+
 
   const handleProductClick = async (product: Product) => {
     await onProductClick(product);

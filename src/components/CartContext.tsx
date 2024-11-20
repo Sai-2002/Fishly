@@ -1,93 +1,95 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { CartItem } from "../types/CartItem"; // Adjust import based on your structure
+// import { CartItem } from "../types/CartItem"; // Adjust import based on your structure
+
+interface CartItem {
+  _id: string; // Unique identifier for the item (e.g., product ID)
+  name: string; // Name of the item
+  price: number; // Price of the item
+  count: number; // Quantity of the item in the cart
+  description: string; // Short description of the item (optional)
+}
+
 
 interface CartContextProps {
   cartItems: CartItem[];
   addItem: (item: CartItem) => void;
   updateCartItem: (item: CartItem, count: number) => void;
   removeFromCart: (id: string) => void;
-  clearCart: () => void; // Optional: Function to clear the cart
+  clearCart: () => void;
   totalCount: number;
 }
 
-// Create CartContext
 const CartContext = createContext<CartContextProps | undefined>(undefined);
 
-// CartProvider component
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    // Load initial state from sessionStorage if available
     return JSON.parse(sessionStorage.getItem("cartItems") || "[]");
   });
 
   const [totalCount, setTotalCount] = useState(0);
 
-  // Update session storage whenever cartItems change
   useEffect(() => {
     sessionStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Update totalCount whenever cartItems change
   useEffect(() => {
     const count = cartItems.reduce((acc, item) => acc + item.count, 0);
     setTotalCount(count);
   }, [cartItems]);
 
-  // Add item to the cart
+  // Add item to the cart with only required fields
   const addItem = (item: CartItem) => {
+    const { _id, name, price, count, description } = item; // Extract required fields
     setCartItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i._id === item._id);
+      const existingItem = prevItems.find((i) => i._id === _id);
       if (existingItem) {
         return prevItems.map((i) =>
-          i._id === item._id
-            ? { ...i, count: i.count + item.count } // Increment count if item exists
-            : i
-        );
-      } else {
-        return [...prevItems, item]; // Add new item if it doesn't exist
-      }
-    });
-  };
-
-  // Update item quantity/count in the cart
-  const updateCartItem = (item: CartItem, count: number) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i._id === item._id);
-      if (existingItem) {
-        return prevItems.map((i) =>
-          i._id === item._id
-            ? { ...i, count, quantity: String(item.weight) } // Update existing item
+          i._id === _id
+            ? { ...i, count: i.count + count } // Increment count if item exists
             : i
         );
       } else {
         return [
           ...prevItems,
-          { ...item, count, quantity: String(item.weight) }, // Add new item if not found
+          { _id, name, price, count, description }, // Add only required fields
         ];
       }
     });
   };
 
-  // Remove item from cart
-  // In CartContext.tsx
+  // Update item quantity/count in the cart with required fields
+  const updateCartItem = (item: CartItem, count: number) => {
+    const { _id, name, price, description } = item; // Extract required fields
+    setCartItems((prevItems) => {
+      const existingItem = prevItems.find((i) => i._id === _id);
+      if (existingItem) {
+        return prevItems.map((i) =>
+          i._id === _id
+            ? { ...i, count } // Update count if item exists
+            : i
+        );
+      } else {
+        return [
+          ...prevItems,
+          { _id, name, price, count, description }, // Add new item with required fields
+        ];
+      }
+    });
+  };
 
   const removeFromCart = (id: string) => {
     setCartItems((prevItems) => {
       const updatedItems = prevItems.filter((item) => item._id !== id);
-
-      // Reset the count for the removed product in session storage
       sessionStorage.setItem(`count_${id}`, "0");
-
       return updatedItems;
     });
   };
 
-  // Clear cart items from state and sessionStorage
   const clearCart = () => {
     setCartItems([]);
-    sessionStorage.removeItem("cartItems"); // Clear the cart from session storage
+    sessionStorage.removeItem("cartItems");
   };
 
   return (
@@ -106,7 +108,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// Hook to use the CartContext
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
@@ -115,5 +116,4 @@ export const useCart = () => {
   return context;
 };
 
-// Export CartContext itself if needed
 export { CartContext };

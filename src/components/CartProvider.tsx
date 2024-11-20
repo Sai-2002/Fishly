@@ -1,17 +1,22 @@
-import React, { createContext, useContext, useState } from "react";
-import { Product } from "../types/Product"; // Adjust the import path
+import React, { createContext, useContext, useState } from "react"; // Adjust the import path
 
 // Define CartItem to extend Product and ensure quantity is a string
-interface CartItem extends Product {
-  quantity: string; // Quantity must be a string
+interface CartItem {
+  _id: string; // Ensure the type matches your product structure
+  name: string;
+  price: number;
+  quantity: string;
+  pieces: string;
+  servings: string;
+  description: string; // Quantity must be a string
 }
 
 interface CartContextType {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
-  incrementItem: (id: number) => void;
-  decrementItem: (id: number) => void;
-  removeFromCart: (id: number) => void;
+  incrementItem: (id: string) => void;
+  decrementItem: (id: string) => void;
+  removeFromCart: (id: string) => void;
   totalItems: number; // Optional: total items in the cart
 }
 
@@ -30,57 +35,75 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
+  // Add to cart with only required fields
   const addToCart = (item: CartItem) => {
+    const { _id, name, pieces, price, description, quantity, servings,} = item; // Extract required fields
     setCart((prev) => {
-      const existingItem = prev.find((i) => i.id === item.id);
+
+      console.log("Previous data in cart provider" + prev)
+      const existingItem = prev.find((i) => i._id === _id);
       if (existingItem) {
-        // Update existing item's quantity, ensuring it's treated as a string
+        // Update existing item's quantity
         return prev.map((i) =>
-          i.id === item.id
+          i._id === _id
             ? {
                 ...i,
-                quantity: String(Number(i.quantity) + Number(item.quantity)),
+                quantity: String(Number(i.quantity) + Number(quantity)),
               }
             : i
         );
       }
-      // Add new item to cart with quantity as a string
-      return [...prev, { ...item, quantity: String(item.quantity) }];
+      // Add new item to cart with extracted fields
+      return [
+        ...prev,
+        {
+          _id,
+          name,
+          pieces,
+          price,
+          quantity: String(quantity),
+          servings,
+          description,
+        },
+      ];
     });
   };
 
-  const incrementItem = (id: number) => {
+  // Increment item's quantity
+  const incrementItem = (_id: string) => {
     setCart((prev) =>
       prev.map((item) =>
-        item.id === id
+        item._id === _id
           ? { ...item, quantity: String(Number(item.quantity) + 1) }
           : item
       )
     );
   };
 
-  const decrementItem = (id: number) => {
+  // Decrement item's quantity
+  const decrementItem = (_id: string) => {
     setCart((prev) => {
-      const existingItem = prev.find((item) => item.id === id);
+      const existingItem = prev.find((item) => item._id === _id);
       if (existingItem) {
         if (Number(existingItem.quantity) > 1) {
           // Update quantity if more than 1
           return prev.map((item) =>
-            item.id === id
+            item._id === _id
               ? { ...item, quantity: String(Number(item.quantity) - 1) }
               : item
           );
         } else {
           // Remove item if quantity is 1
-          return prev.filter((item) => item.id !== id);
+          return prev.filter((item) => item._id !== _id);
         }
       }
       return prev; // No changes if item not found
     });
   };
 
-  const removeFromCart = (id: number) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  // Remove item from cart
+  const removeFromCart = (_id: string) => {
+    setCart((prev) => prev.filter((item) => item._id !== _id));
   };
 
   // Calculate total items in cart
@@ -104,3 +127,4 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     </CartContext.Provider>
   );
 };
+

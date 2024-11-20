@@ -4,9 +4,16 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate for naviga
 import { CartContext } from "./CartContext";
 import Navbar from "./NavBar";
 import Footer from "./Footer";
-import { CartItem } from "../types/CartItem";
+// import { CartItem } from "../types/CartItem";
 import axios from "axios";
 
+interface CartItem {
+  _id: string; // Unique identifier for the item (e.g., product ID)
+  name: string; // Name of the item
+  price: number; // Price of the item
+  count: number; // Quantity of the item in the cart
+  description: string; // Short description of the item (optional)
+}
 interface CartProps {
   updateTotalCount: (counts: number[]) => void;
   searchTerm: string;
@@ -145,16 +152,16 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
                   key={item._id}
                   className="mb-4 border-b pb-4 flex items-start"
                 >
-                  <img
-                    src={"data:image/jpeg;base64," + item.image}
+                  {/* <img
+                    src={"data:image/jpeg;base64,"}
                     alt={item.name}
                     className="w-34 h-24 object-fill mr-4"
-                  />
+                  /> */}
                   <div className="flex-grow">
                     <h2 className="text-lg font-semibold">{item.name}</h2>
-                    <p className="text-sm text-gray-600">
-                      Quantity: {item.weight}
-                    </p>
+                    {/* <p className="text-sm text-gray-600">
+                      Quantity: {item.description}
+                    </p> */}
                     <div className="flex flex-col mt-2 space-y-2">
                       <div className="flex items-center space-x-2">
                         <button
