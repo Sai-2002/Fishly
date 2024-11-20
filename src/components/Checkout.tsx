@@ -181,11 +181,11 @@ const Checkout: React.FC = () => {
                 key={item._id}
                 className="mb-4 border-b pb-4 flex items-start"
               >
-                {/* <img
+                <img
                   src={"data:image/jpeg;base64," + item.image}
                   alt={item.name}
                   className="w-20 h-20 object-cover mr-4"
-                /> */}
+                />
                 <div className="flex-grow">
                   <h3 className="font-semibold">{item.name}</h3>
                   <p>Quantity: {item.count}</p>

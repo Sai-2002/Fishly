@@ -7,6 +7,8 @@ interface CartItem {
   price: number; // Price of the item
   count: number; // Quantity of the item in the cart
   description: string; // Short description of the item (optional)
+  image: string;
+  weight: string;
 }
 
 
@@ -41,7 +43,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Add item to the cart with only required fields
   const addItem = (item: CartItem) => {
-    const { _id, name, price, count, description } = item; // Extract required fields
+    const { _id, name, price, count, description,image ,weight } = item; // Extract required fields
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((i) => i._id === _id);
       if (existingItem) {
@@ -53,7 +55,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       } else {
         return [
           ...prevItems,
-          { _id, name, price, count, description }, // Add only required fields
+          { _id, name, price, count, description, image, weight }, // Add only required fields
         ];
       }
     });
@@ -61,7 +63,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Update item quantity/count in the cart with required fields
   const updateCartItem = (item: CartItem, count: number) => {
-    const { _id, name, price, description } = item; // Extract required fields
+    const { _id, name, price, description, image, weight } = item; // Extract required fields
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((i) => i._id === _id);
       if (existingItem) {
@@ -73,7 +75,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       } else {
         return [
           ...prevItems,
-          { _id, name, price, count, description }, // Add new item with required fields
+          { _id, name, price, count, description, image, weight }, // Add new item with required fields
         ];
       }
     });
