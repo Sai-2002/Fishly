@@ -124,7 +124,7 @@ const Checkout: React.FC = () => {
       order: productsSummary,
       cuttingMethod: cuttingMethod,
       paymentMethod: paymentMethod,
-      cost: totalPrice - totalPrice * 0.3,
+      cost: totalPrice - totalPrice * 0.1,
       transaction_id: "",
       status: "Order Placed",
     };
@@ -202,11 +202,11 @@ const Checkout: React.FC = () => {
                 Total Price: Rs.
                 <span className="">{totalPrice.toFixed(2)}</span>
               </p>
-              <span className="text-blue-400">30% off</span>
+              <span className="text-blue-400">10% off</span>
             </div>
             <p className="text-lg">
               <span className="font-bold">Discounted Price: </span> Rs.
-              {(totalPrice - totalPrice * 0.3).toFixed(2)}
+              {(totalPrice - totalPrice * 0.1).toFixed(2)}
             </p>
           </div>
         </div>
