@@ -42,7 +42,17 @@ const Checkout: React.FC = () => {
   const getMinTime = (date: Date | null) => {
     if (!date) return minDateTime; // Default case
     const isToday = date.toDateString() === currentTime.toDateString();
-    return isToday ? minDateTime : new Date(date.setHours(0, 0, 0, 0)); // 00:00 for future dates
+    return isToday
+      ? minDateTime
+      : new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          0,
+          0,
+          0,
+          0
+        ); // Start of the day
   };
 
   if (!cartContext) {
@@ -312,7 +322,7 @@ This is your new order!
         </div>
 
         {selectedService === "Onsite cut" && (
-          <div className="mt-4 space-y-2">
+          <div className="mt-4 w-full space-y-2">
             <div className="flex space-x-4">
               <DatePicker
                 selected={prebookingDate}
