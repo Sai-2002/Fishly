@@ -5,11 +5,20 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 
+interface User {
+  username: string;
+  _id: string;
+  address: string;
+  mobile: string;
+}
+
 const Checkout: React.FC = () => {
   const uid = sessionStorage.getItem("uid");
 
   const navigate = useNavigate();
   const cartContext = useContext(CartContext);
+
+  const [userCred, setUserCred] = useState<User | null>(null);
 
   const [isAddress, setIsAddress] = useState<boolean>(false);
   const [address, setAddress] = useState({
@@ -25,7 +34,16 @@ const Checkout: React.FC = () => {
   const [selectedService, setSelectedService] = useState("Onsite cut");
   const [prebookingDate, setPrebookingDate] = useState<Date | null>(null);
 
-  const minDate = new Date(2024, 10, 24);
+  const currentTime = new Date();
+  const minDateTime = new Date(currentTime.getTime() + 45 * 60 * 1000); // 45 minutes from now
+  const maxTime = new Date();
+  maxTime.setHours(23, 59, 59, 999); // End of the day
+
+  const getMinTime = (date: Date | null) => {
+    if (!date) return minDateTime; // Default case
+    const isToday = date.toDateString() === currentTime.toDateString();
+    return isToday ? minDateTime : new Date(date.setHours(0, 0, 0, 0)); // 00:00 for future dates
+  };
 
   if (!cartContext) {
     return <div>Error: Cart context is unavailable.</div>;
@@ -44,6 +62,26 @@ const Checkout: React.FC = () => {
   const totalPrice = cartItems.reduce((acc, item) => {
     return acc + item.price * item.count;
   }, 0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.fishly.co.in/getUserDetails/${uid}`
+        );
+        console.log(response.data);
+        // return response.data;
+
+        setUserCred(response.data);
+        // if(userCred?.address != ""){
+
+        // }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -118,6 +156,7 @@ const Checkout: React.FC = () => {
     paymentMethod === "Cash on Delivery" ? "Place Order" : "Coming Soon";
 
   const placeOrder = async () => {
+    const { clearCart } = cartContext;
     const data = {
       customer_id: uid,
       address: formattedAddress,
@@ -141,10 +180,45 @@ const Checkout: React.FC = () => {
       );
 
       alert(response.data.Success);
+      clearCart();
+      const emailMessage = `
+Hello,
+
+We have received your order successfully! Here are the details:
+
+- **Customer ID**: ${uid}
+- **Customer Name**: ${userCred?.username}
+- **Phone Number**: ${userCred?.mobile}
+- **Delivery Address**: ${formattedAddress}
+- **Order Summary**: ${productsSummary}
+- **Cutting Method**: ${cuttingMethod}
+- **Payment Method**: ${paymentMethod}
+- **Total Cost (after discount)**: ₹${(totalPrice - totalPrice * 0.1).toFixed(2)}
+
+This is your new order!
+`;
+      const jsonData = {
+        SUBJECT: `Recieved Order from ${userCred?.username}`,
+        BODY: emailMessage,
+      };
+      try {
+        const response = await axios.post(
+          "https://api.fishly.co.in/getNotification",
+          jsonData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.data != null) {
+        }
+      } catch (error) {
+        console.log(error);
+      }
       navigate("/");
     } catch (error) {}
-
-    console.log(data);
   };
 
   // const isAddressComplete =
@@ -243,10 +317,12 @@ const Checkout: React.FC = () => {
               <DatePicker
                 selected={prebookingDate}
                 onChange={(date) => setPrebookingDate(date)}
-                minDate={minDate} // Disable dates before Nov 24, 2024
                 showTimeSelect
+                minDate={new Date()}
+                minTime={getMinTime(prebookingDate)}
+                maxTime={maxTime}
                 timeFormat="HH:mm"
-                timeIntervals={15} // Set time intervals to 15 minutes
+                timeIntervals={5} // Set time intervals to 15 minutes
                 dateFormat="MMMM d, yyyy h:mm aa"
                 placeholderText="Select a date"
                 className="w-full p-2 border border-gray-300 rounded"
@@ -274,10 +350,12 @@ const Checkout: React.FC = () => {
               <DatePicker
                 selected={prebookingDate}
                 onChange={(date) => setPrebookingDate(date)}
-                minDate={minDate} // Disable dates before Nov 24, 2024
                 showTimeSelect
+                minDate={new Date()}
+                minTime={getMinTime(prebookingDate)}
+                maxTime={maxTime}
                 timeFormat="HH:mm"
-                timeIntervals={15} // Set time intervals to 15 minutes
+                timeIntervals={5} // Set time intervals to 15 minutes
                 dateFormat="MMMM d, yyyy h:mm aa"
                 placeholderText="Select a date"
                 className="w-full p-2 border border-gray-300 rounded"

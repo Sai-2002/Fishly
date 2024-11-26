@@ -64,6 +64,7 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const getAllOrder = async () => {
       try {
         const response = await axios.get(
@@ -79,12 +80,11 @@ const Profile: React.FC = () => {
     getAllOrder();
   }, [uid]);
 
-
   const updateAdd = async (address: string) => {
     try {
       const resp = await axios.post(
         `https://api.fishly.co.in/updateAddress/${uid}`,
-        {address: address},
+        { address: address },
         {
           headers: {
             "Content-Type": "application/json",
