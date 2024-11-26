@@ -184,16 +184,16 @@ const Checkout: React.FC = () => {
       const emailMessage = `
 Hello,
 
-We have received your order successfully! Here are the details:
+We have received an order successfully! Here are the details:
 
-- **Customer ID**: ${uid}
-- **Customer Name**: ${userCred?.username}
-- **Phone Number**: ${userCred?.mobile}
-- **Delivery Address**: ${formattedAddress}
-- **Order Summary**: ${productsSummary}
-- **Cutting Method**: ${cuttingMethod}
-- **Payment Method**: ${paymentMethod}
-- **Total Cost (after discount)**: ₹${(totalPrice - totalPrice * 0.1).toFixed(2)}
+- CUSTOMER ID: ${uid}
+- CUSTOMER NAME: ${userCred?.username}
+- PHONE NUMBER: ${userCred?.mobile}
+- DELIVERY ADDRESS: ${formattedAddress}
+- ORDER SUMMARY: ${productsSummary}
+- CUTTING METHOD: ${cuttingMethod}
+- PAYMENT METHOD: ${paymentMethod}
+- TOTAL COST: ₹${(totalPrice - totalPrice * 0.1).toFixed(2)}
 
 This is your new order!
 `;
@@ -201,6 +201,7 @@ This is your new order!
         SUBJECT: `Recieved Order from ${userCred?.username}`,
         BODY: emailMessage,
       };
+      navigate("/");
       try {
         const response = await axios.post(
           "https://api.fishly.co.in/getNotification",
@@ -217,7 +218,6 @@ This is your new order!
       } catch (error) {
         console.log(error);
       }
-      navigate("/");
     } catch (error) {}
   };
 
