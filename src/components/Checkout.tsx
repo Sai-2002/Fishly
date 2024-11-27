@@ -13,7 +13,7 @@ interface User {
 }
 
 const Checkout: React.FC = () => {
-  const uid = sessionStorage.getItem("uid");
+  const uid = localStorage.getItem("uid");
 
   const navigate = useNavigate();
   const cartContext = useContext(CartContext);

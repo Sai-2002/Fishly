@@ -14,7 +14,7 @@ interface CartItem {
   count: number; // Quantity of the item in the cart
   description: string; // Short description of the item (optional)
   image: string;
-  weight:string;
+  weight: string;
 }
 interface CartProps {
   updateTotalCount: (counts: number[]) => void;
@@ -25,7 +25,7 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
   const navigate = useNavigate(); // Hook for navigation
   const cartContext = useContext(CartContext);
   const [localSearchTerm, setLocalSearchTerm] = useState<string>(searchTerm);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   if (!cartContext) {
     return <div>Error: Cart context is unavailable.</div>;
@@ -74,12 +74,11 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
   };
 
   const verifyToken = async () => {
-    const uid = sessionStorage.getItem("uid");
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-    if (!uid || !token) {
+    if (isLoggedIn != "true") {
       console.log(isLoggedIn);
-      navigate("/login");
+      navigate("/sign-up");
     }
 
     try {
@@ -95,24 +94,23 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
 
       if (response.data.success) {
         // Token is valid, set the logged-in state
-        setIsLoggedIn(true);
         // Optionally navigate to a different page
         navigate("/checkout"); // Replace with your desired route
       } else {
         // Token is invalid, handle accordingly
-        sessionStorage.removeItem("uid");
-        sessionStorage.removeItem("token");
-        setIsLoggedIn(false);
+        localStorage.removeItem("uid");
+        localStorage.removeItem("token");
+        localStorage.setItem("isLoggedIn", "false");
         // Optionally navigate to login
-        navigate("/login");
+        navigate("/sign-up");
       }
     } catch (error) {
       console.error("Verification failed", error);
-      sessionStorage.removeItem("uid");
-      sessionStorage.removeItem("token");
-      setIsLoggedIn(false);
+      localStorage.removeItem("uid");
+      localStorage.removeItem("token");
+      localStorage.setItem("isLoggedIn", "false");
       // Optionally navigate to login
-      navigate("/login");
+      navigate("/sign-up");
     }
   };
 
@@ -155,7 +153,7 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
                   className="mb-4 border-b pb-4 flex items-start"
                 >
                   <img
-                    src={"data:image/jpeg;base64," +item.image}
+                    src={"data:image/jpeg;base64," + item.image}
                     alt={item.name}
                     className="w-34 h-24 object-fill mr-4"
                   />

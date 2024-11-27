@@ -6,10 +6,7 @@ import axios from "axios";
 const SignUpDetails: React.FC = () => {
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [errorMessage, setErrorMessage] = useState(""); // State to toggle password visibility
   const [loading, setLoading] = useState<boolean>(false); // Loading state
   const [error, setError] = useState<string | null>(null);
 
@@ -24,28 +21,11 @@ const SignUpDetails: React.FC = () => {
       return;
     }
 
-    // Validate password (must be between 8 and 24 characters, no spaces)
-    if (password.length < 8 || password.length > 24) {
-      setErrorMessage("Password must be between 8 and 24 characters.");
-      return;
-    }
-
-    if (/\s/.test(password)) {
-      setErrorMessage("Password must not contain spaces.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match.");
-      return;
-    }
-
     setErrorMessage("");
 
     const formData = new FormData();
     formData.append("username", name);
     formData.append("mobile", mobile);
-    formData.append("password", password);
 
     console.log(name);
     console.log(error);
@@ -61,8 +41,9 @@ const SignUpDetails: React.FC = () => {
         }
       );
 
-      sessionStorage.setItem("uid", response.data.id);
-      sessionStorage.setItem("token", response.data.token);
+      localStorage.setItem("uid", response.data.id);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("isLoggedIn", "true");
       navigate("/");
     } catch (error) {
       setError("Invalid username number or password");
@@ -96,40 +77,6 @@ const SignUpDetails: React.FC = () => {
         />
 
         {/* Input for Password with toggle visibility */}
-        <div className="mb-6 w-full relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="p-3 border border-gray-300 rounded w-full"
-          />
-          <button
-            type="button"
-            className="absolute right-3 top-3 text-gray-600"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? "Hide" : "Show"}
-          </button>
-        </div>
-
-        {/* Input for Confirm Password with toggle visibility */}
-        <div className="mb-6 w-full relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="p-3 border border-gray-300 rounded w-full"
-          />
-          <button
-            type="button"
-            className="absolute right-3 top-3 text-gray-600"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? "Hide" : "Show"}
-          </button>
-        </div>
 
         {/* Display error message if validation fails */}
         {errorMessage && (
@@ -164,6 +111,10 @@ const SignUp: React.FC = () => {
     navigate("/"); // Navigate to the Home page when the logo is clicked
   };
 
+  const handleLoginClick = () => {
+    navigate("/login"); // Navigate to the Sign Up page when "Sign In" is clicked
+  };
+
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
       <div className="absolute top-6">
@@ -177,6 +128,15 @@ const SignUp: React.FC = () => {
 
       {/* The SignUpDetails box starts immediately below the logo */}
       <SignUpDetails />
+      <div className="mt-4 text-center">
+        <span className="text-gray-600">Registered User?</span>
+        <span
+          className="text-blue-600 ml-2 cursor-pointer hover:underline"
+          onClick={handleLoginClick} // Handle click event to navigate to Sign Up
+        >
+          Login
+        </span>
+      </div>
     </div>
   );
 };

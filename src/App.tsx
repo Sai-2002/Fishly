@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
@@ -10,8 +9,8 @@ import Profile from "./components/Profile";
 import Checkout from "./components/Checkout";
 import { CartProvider } from "./components/CartContext";
 import Products from "./components/Products";
+import Popup from "./components/Popup"; // Import the Popup component
 import { Product } from "./types/Product"; // Import Product type
-
 import axios from "axios";
 
 const App: React.FC = () => {
@@ -19,18 +18,25 @@ const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [, setLoading] = useState<boolean>(true);
   const [products, setProducts] = useState<Product[]>([]);
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+    if (!hasVisited) {
+      setShowPopup(true);
+      localStorage.setItem("hasVisited", "true");
+    }
+  }, []);
+
+  const handlePopupClose = () => {
+    setShowPopup(false);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("https://api.fishly.co.in/getAll");
-
         setProducts(response.data);
-
-        console.log(products);
-
-        // const result = await response.json();
-        // setData(result);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -54,12 +60,12 @@ const App: React.FC = () => {
   return (
     <CartProvider>
       <Router>
+        {showPopup && <Popup onClose={handlePopupClose} />}
         <Routes>
           <Route
             path="/"
             element={
               <Home
-                //totalCount={totalCount}
                 onSearchChange={handleSearchChange}
                 updateTotalCount={updateTotalCount}
                 searchTerm={searchTerm}
@@ -67,10 +73,7 @@ const App: React.FC = () => {
               />
             }
           />
-          <Route
-            path="/product-details"
-            element={<ProdDetails />} // Pass products directly to ProdDetails
-          />
+          <Route path="/product-details" element={<ProdDetails />} />
           <Route
             path="/cart"
             element={
@@ -90,10 +93,8 @@ const App: React.FC = () => {
               <Products
                 updateTotalCount={updateTotalCount}
                 searchTerm={searchTerm}
-                products={products} // Pass products to Products component
-                onProductClick={(_product: Product) => {
-                  // Optionally implement the product click functionality here
-                }}
+                products={products}
+                onProductClick={(_product: Product) => {}}
               />
             }
           />

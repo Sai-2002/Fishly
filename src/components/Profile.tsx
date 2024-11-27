@@ -45,7 +45,7 @@ const Profile: React.FC = () => {
     setIsEditPopupVisible(true);
   };
 
-  const uid = sessionStorage.getItem("uid");
+  const uid = localStorage.getItem("uid");
 
   // sessionStorage.setItem("address", )
 

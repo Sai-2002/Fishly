@@ -27,14 +27,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   // Initialize cart items from session storage or an empty array
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    return JSON.parse(sessionStorage.getItem("cartItems") || "[]");
+    return JSON.parse(localStorage.getItem("cartItems") || "[]");
   });
 
   const [totalCount, setTotalCount] = useState(0);
 
   // Effect to update session storage whenever cartItems change
   useEffect(() => {
-    sessionStorage.setItem("cartItems", JSON.stringify(cartItems));
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
   // Effect to calculate the total count of items in the cart whenever cartItems change
@@ -85,7 +85,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   const removeFromCart = (id: string) => {
     setCartItems((prevItems) => {
       const updatedItems = prevItems.filter((item) => item._id !== id);
-      sessionStorage.setItem("cartItems", JSON.stringify(updatedItems)); // Update session storage
+      localStorage.setItem("cartItems", JSON.stringify(updatedItems)); // Update session storage
       return updatedItems;
     });
   };
@@ -93,7 +93,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   // Clear the entire cart and remove it from session storage
   const clearCart = () => {
     setCartItems([]); // Clear the state
-    sessionStorage.removeItem("cartItems"); // Clear session storage
+    localStorage.removeItem("cartItems"); // Clear session storage
   };
 
   return (
