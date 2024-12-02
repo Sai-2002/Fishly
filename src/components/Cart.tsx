@@ -44,16 +44,16 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
     const currentCount = item.count;
 
     if (increment) {
-      // Increment count
-      const newCount = currentCount + 1;
+      // Increment count by 0.5
+      const newCount = currentCount + 0.5;
       updateCartItem({ ...item, count: newCount }, newCount);
     } else {
-      // Decrement count or remove item if count is 1
+      // Decrement count by 0.5 or remove item if count is 1
       if (currentCount === 1) {
         // Remove item from cart if count is 1
         removeFromCart(item._id);
       } else {
-        const newCount = currentCount - 1;
+        const newCount = currentCount - 0.5;
         updateCartItem({ ...item, count: newCount }, newCount);
       }
     }
@@ -160,7 +160,7 @@ const Cart: React.FC<CartProps> = ({ updateTotalCount, searchTerm }) => {
                   <div className="flex-grow">
                     <h2 className="text-lg font-semibold">{item.name}</h2>
                     <p className="text-sm text-gray-600">
-                      Quantity: {item.weight}
+                      Quantity: {item.weight} g
                     </p>
                     <div className="flex flex-col mt-2 space-y-2">
                       <div className="flex items-center space-x-2">

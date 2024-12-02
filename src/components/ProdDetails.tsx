@@ -44,16 +44,27 @@ const ProdDetails: React.FC = () => {
 
   const handleCountChange = (increment: boolean) => {
     setCount((prevCount) => {
-      const newCount = increment ? prevCount + 1 : Math.max(prevCount - 1, 0);
+      let newCount;
+      if (prevCount === 0 && increment) {
+        // First addition to cart sets count to 1
+        newCount = 1;
+      } else if (!increment && prevCount === 1) {
+        // Removing the last item from the cart resets count to 0
+        newCount = 0;
+      } else {
+        // Increment or decrement by 0.5
+        newCount = increment
+          ? parseFloat((prevCount + 0.5).toFixed(1))
+          : parseFloat((prevCount - 0.5).toFixed(1));
+      }
 
       // Update session storage
-      sessionStorage.setItem("count_${product._id}", newCount.toString());
-
-      // Update cart context
       if (newCount > 0) {
-        updateCartItem(product, newCount);
+        sessionStorage.setItem(`count_${product._id}`, newCount.toString());
+        updateCartItem(product, newCount); // Update the cart with new count
       } else {
-        removeFromCart(product._id);
+        sessionStorage.removeItem(`count_${product._id}`);
+        removeFromCart(product._id); // Remove product from cart
       }
 
       return newCount;
@@ -120,7 +131,7 @@ const ProdDetails: React.FC = () => {
               ) : (
                 <div className="flex items-center mb-4 sm:mb-6">
                   <span className="text-md font-semibold text-gray-600 mr-4">
-                    Quantity
+                    Quantity (kg)
                   </span>
                   <button
                     className="border px-2 py-1 text-gray-600 hover:bg-gray-200"

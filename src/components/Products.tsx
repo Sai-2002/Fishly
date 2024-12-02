@@ -55,14 +55,28 @@ const Products: React.FC<ProductsProps> = ({
 
     setCounts((prev) => {
       const newCounts = [...prev];
+      let currentCount = newCounts[index];
+
+      // Determine the new count based on increment or decrement
       if (increment) {
-        newCounts[index] += 1;
-      } else if (newCounts[index] > 0) {
-        newCounts[index] -= 1;
+        if (currentCount === 0) {
+          currentCount = 1; // First add-to-cart action sets count to 1
+        } else {
+          currentCount += 0.5;
+        }
+      } else if (currentCount === 1) {
+        currentCount = 0; // If count is 1 and decrement is clicked, set to 0
+      } else if (currentCount > 0) {
+        currentCount -= 0.5;
       }
 
-      updateTotalCount(newCounts); // Make sure this function works correctly
-      const currentCount = newCounts[index];
+      // Ensure the count doesn't go below 0
+      if (currentCount < 0) currentCount = 0;
+
+      newCounts[index] = currentCount;
+
+      // Update total counts
+      updateTotalCount(newCounts);
 
       // Update session storage
       sessionStorage.setItem(`count_${product._id}`, currentCount.toString());
@@ -127,7 +141,7 @@ const Products: React.FC<ProductsProps> = ({
                         className="bg-white text-black font-bold rounded-md px-4 py-2"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleCountChange(product, index, true);
+                          handleCountChange(product, index, true); // First click sets count to 1
                         }}
                       >
                         Add to Cart
@@ -138,7 +152,7 @@ const Products: React.FC<ProductsProps> = ({
                           className="text-black font-bold w-8 h-8 flex items-center justify-center"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleCountChange(product, index, false);
+                            handleCountChange(product, index, false); // Decrement by 0.5
                           }}
                         >
                           -
@@ -148,7 +162,7 @@ const Products: React.FC<ProductsProps> = ({
                           className="text-black font-bold w-8 h-8 flex items-center justify-center"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleCountChange(product, index, true);
+                            handleCountChange(product, index, true); // Increment by 0.5
                           }}
                         >
                           +
