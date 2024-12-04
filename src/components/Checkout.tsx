@@ -33,11 +33,21 @@ const Checkout: React.FC = () => {
   const [productsSummary, setProductsSummary] = useState<string>("");
   const [selectedService, setSelectedService] = useState("Onsite cut");
   const [prebookingDate, setPrebookingDate] = useState<Date | null>(null);
+  const [dateError, setDateError] = useState<string>("");
 
   const currentTime = new Date();
   const minDateTime = new Date(currentTime.getTime() + 45 * 60 * 1000); // 45 minutes from now
   const maxTime = new Date();
   maxTime.setHours(23, 59, 59, 999); // End of the day
+
+  const validateDate = (): boolean => {
+    if (!prebookingDate) {
+      setDateError("Please select a date and time for the service.");
+      return false;
+    }
+    setDateError("");
+    return true;
+  };
 
   const getMinTime = (date: Date | null) => {
     if (!date) return minDateTime; // Default case
@@ -166,6 +176,7 @@ const Checkout: React.FC = () => {
     paymentMethod === "Cash on Delivery" ? "Place Order" : "Coming Soon";
 
   const placeOrder = async () => {
+    if (!validateDate()) return;
     const { clearCart } = cartContext;
     const data = {
       customer_id: uid,
@@ -302,75 +313,92 @@ This is your new order!
         </button>
       </div>
 
-      {/* Service Options Section */}
       <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-md mb-6">
         <h2 className="text-lg font-semibold mb-4">
           Service Option for Pre-Booking
         </h2>
 
-        <div className="flex items-center mb-4">
-          <input
-            type="radio"
-            id="onsiteCut"
-            name="serviceOption"
-            value="Onsite cut"
-            checked={selectedService === "Onsite cut"}
-            onChange={() => setSelectedService("Onsite cut")}
-            className="mr-2"
-          />
-          <label htmlFor="onsiteCut">Onsite cut</label>
+        {/* Onsite Cut Option */}
+        <div className="flex items-start mb-2">
+          <div className="flex items-center">
+            <input
+              type="radio"
+              id="onsiteCut"
+              name="serviceOption"
+              value="Onsite cut"
+              checked={selectedService === "Onsite cut"}
+              onChange={() => setSelectedService("Onsite cut")}
+              className="mr-2"
+            />
+            <label htmlFor="onsiteCut" className="font-medium min-w-[80px]">
+              Onsite cut
+            </label>
+          </div>
+          {selectedService === "Onsite cut" && (
+            <p className="text-[10px] text-gray-500 ml-4">
+              Our executive will deliver live fish and clean them at your home.
+              Kindly provide space for our team.
+            </p>
+          )}
         </div>
-
         {selectedService === "Onsite cut" && (
-          <div className="mt-4 w-full space-y-2">
-            <div className="flex space-x-4">
-              <DatePicker
-                selected={prebookingDate}
-                onChange={(date) => setPrebookingDate(date)}
-                showTimeSelect
-                minDate={new Date()}
-                minTime={getMinTime(prebookingDate)}
-                maxTime={maxTime}
-                timeFormat="HH:mm"
-                timeIntervals={5} // Set time intervals to 15 minutes
-                dateFormat="MMMM d, yyyy h:mm aa"
-                placeholderText="Select a date"
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
+          <div className="mt-2">
+            <DatePicker
+              selected={prebookingDate}
+              onChange={(date) => setPrebookingDate(date)}
+              showTimeSelect
+              minDate={new Date()}
+              minTime={getMinTime(prebookingDate)}
+              maxTime={maxTime}
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="MMMM d, yyyy h:mm aa"
+              placeholderText="Select a date"
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {dateError && <p className="text-red-500 text-sm">{dateError}</p>}
           </div>
         )}
 
-        <div className="flex items-center mb-4 pt-4">
-          <input
-            type="radio"
-            id="precut"
-            name="serviceOption"
-            value="Precut"
-            checked={selectedService === "Precut"}
-            onChange={() => setSelectedService("Precut")}
-            className="mr-2"
-          />
-          <label htmlFor="precut">Precut</label>
+        {/* Precut Option */}
+        <div className="flex items-start mb-2">
+          <div className="flex items-center">
+            <input
+              type="radio"
+              id="precut"
+              name="serviceOption"
+              value="Precut"
+              checked={selectedService === "Precut"}
+              onChange={() => setSelectedService("Precut")}
+              className="mr-2"
+            />
+            <label htmlFor="precut" className="font-medium min-w-[80px]">
+              Precut
+            </label>
+          </div>
+          {selectedService === "Precut" && (
+            <p className="text-xs text-gray-500 ml-4">
+              In minutes, you'll receive a personalized video of your fish being
+              caught, filleted, and cleaned.
+            </p>
+          )}
         </div>
-
         {selectedService === "Precut" && (
-          <div className="mt-4 space-y-2">
-            <div className="flex space-x-4">
-              <DatePicker
-                selected={prebookingDate}
-                onChange={(date) => setPrebookingDate(date)}
-                showTimeSelect
-                minDate={new Date()}
-                minTime={getMinTime(prebookingDate)}
-                maxTime={maxTime}
-                timeFormat="HH:mm"
-                timeIntervals={5} // Set time intervals to 15 minutes
-                dateFormat="MMMM d, yyyy h:mm aa"
-                placeholderText="Select a date"
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
+          <div className="mt-2">
+            <DatePicker
+              selected={prebookingDate}
+              onChange={(date) => setPrebookingDate(date)}
+              showTimeSelect
+              minDate={new Date()}
+              minTime={getMinTime(prebookingDate)}
+              maxTime={maxTime}
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="MMMM d, yyyy h:mm aa"
+              placeholderText="Select a date"
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {dateError && <p className="text-red-500 text-sm">{dateError}</p>}
           </div>
         )}
       </div>
