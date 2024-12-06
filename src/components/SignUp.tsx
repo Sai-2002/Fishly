@@ -52,8 +52,43 @@ const SignUpDetails: React.FC = () => {
     }
 
     alert("Sign-up successful!");
+    sendMessage(name, mobile);
   };
 
+  const sendMessage = async (name: string, mobile: string) => {
+    const data = {
+      from_phone_number_id: "461924427012283",
+      phone_number: `${mobile}`,
+      template_name: "signincustomers",
+      template_language: "en",
+      field_1: `${name}`,
+      contact: {
+        first_name: `${name}`,
+        // "last_name" : "naath",
+        // "email" : "",
+        country: "india",
+        language_code: "en",
+        // "groups" : ""
+      },
+    };
+
+    try {
+      const response = await axios.post(
+        "https://app.salegrowy.com/api/1e626700-a6a9-4c88-a72a-2d878fad4b8b/contact/send-template-message",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer NJ1jTV4ekZZz6MkxymqkIuRyanyZio8PXdu8vtkPRItiOcM7yHSIbYG7Sz2KMive`,
+          },
+        }
+      );
+
+      if (response.status == 200) {
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="flex flex-col items-center bg-white p-8 rounded-lg shadow-md w-80 mt-2">
       <h2 className="text-3xl font-bold mb-8">SIGN UP</h2>

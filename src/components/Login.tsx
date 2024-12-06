@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate for naviga
 
 const LoginDetails: React.FC = () => {
   const [username, setusername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false); // Loading state
   const navigate = useNavigate();
@@ -17,7 +16,6 @@ const LoginDetails: React.FC = () => {
 
     const formData = new FormData();
     formData.append("mobile", username);
-    formData.append("username", password);
 
     try {
       const response = await axios.post(
@@ -47,13 +45,6 @@ const LoginDetails: React.FC = () => {
     <div className="flex flex-col items-center bg-white p-8 rounded-lg shadow-md w-80 mt-2">
       <h2 className="text-3xl font-bold mb-8">LOGIN</h2>
       <form onSubmit={handleLogin} className="w-full">
-        <input
-          type="text"
-          placeholder="Username"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mb-6 p-3 border border-gray-300 rounded w-full"
-        />
         <input
           type="text"
           placeholder="Mobile Number"

@@ -202,6 +202,7 @@ const Checkout: React.FC = () => {
 
       alert(response.data.Success);
       clearCart();
+      sendMessage(userCred?.username, userCred?.mobile);
       const emailMessage = `
 Hello,
 
@@ -240,6 +241,44 @@ This is your new order!
         console.log(error);
       }
     } catch (error) {}
+  };
+
+  const sendMessage = async (
+    name: string | undefined,
+    mobile: string | undefined
+  ) => {
+    const data = {
+      from_phone_number_id: "461924427012283",
+      phone_number: `${mobile}`,
+      template_name: "ordercx",
+      template_language: "en",
+      field_1: `${name}`,
+      contact: {
+        first_name: `${name}`,
+        // "last_name" : "naath",
+        // "email" : "",
+        country: "india",
+        language_code: "en",
+        // "groups" : ""
+      },
+    };
+
+    try {
+      const response = await axios.post(
+        "https://app.salegrowy.com/api/1e626700-a6a9-4c88-a72a-2d878fad4b8b/contact/send-template-message",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer NJ1jTV4ekZZz6MkxymqkIuRyanyZio8PXdu8vtkPRItiOcM7yHSIbYG7Sz2KMive`,
+          },
+        }
+      );
+
+      if (response.status == 200) {
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // const isAddressComplete =
