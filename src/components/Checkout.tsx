@@ -36,7 +36,7 @@ const Checkout: React.FC = () => {
   const [dateError, setDateError] = useState<string>("");
 
   const currentTime = new Date();
-  const minDateTime = new Date(currentTime.getTime() + 45 * 60 * 1000); // 45 minutes from now
+  const minDateTime = new Date(currentTime.getTime() + 90 * 60 * 1000); // 45 minutes from now
   const maxTime = new Date();
   maxTime.setHours(23, 59, 59, 999); // End of the day
 
