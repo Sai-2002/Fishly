@@ -66,7 +66,7 @@ const WhyFishly: React.FC = () => {
         {features.map((feature) => (
           <div
             key={feature.id}
-            className="relative flex flex-col items-center justify-center p-4 border rounded-lg shadow-lg w-full max-w-[240px] h-36 cursor-pointer group"
+            className="relative flex flex-col items-center justify-center p-4 border rounded-lg shadow-lg w-full max-w-[300px] h-48 cursor-pointer group"
             onMouseEnter={() => handleHover(feature.id)}
             onMouseLeave={handleMouseLeave}
             onTouchStart={() => handleHover(feature.id)}
