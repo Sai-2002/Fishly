@@ -215,7 +215,7 @@ We have received an order successfully! Here are the details:
 - ORDER SUMMARY: ${productsSummary}
 - CUTTING METHOD: ${cuttingMethod}
 - PAYMENT METHOD: ${paymentMethod}
-- TOTAL COST: ₹${(totalPrice - totalPrice * 0.1).toFixed(2)}
+- TOTAL COST: ₹${totalPrice.toFixed(2)}
 
 This is your new order!
 `;
