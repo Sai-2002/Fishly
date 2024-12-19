@@ -193,7 +193,10 @@ const Profile: React.FC = () => {
           ) : (
             <div className="flex flex-col items-center">
               <p className="text-gray-600 text-center pb-3">No orders yet.</p>
-              <button className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors w-full">
+              <button
+                className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors w-full"
+                onClick={handleBackToHome}
+              >
                 Shop now
               </button>
             </div>
