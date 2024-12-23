@@ -14,6 +14,7 @@ const Slideshow: React.FC = () => {
     "./images/desktop_image1.jpg",
     "./images/desktop_image3.jpg",
     "./images/desktop_image2.jpg",
+    "./images/desktop_image5.jpg",
   ];
 
   const desktopImages = [
@@ -21,6 +22,7 @@ const Slideshow: React.FC = () => {
     "./images/mobile_image3.jpg",
     "./images/mobile_image1.jpg",
     "./images/mobile_image2.jpg",
+    "./images/mobile_image5.jpg",
   ];
 
   // Slider settings
