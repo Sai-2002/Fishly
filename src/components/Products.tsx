@@ -74,7 +74,6 @@ const Products: React.FC<ProductsProps> = ({
 
       return newCounts;
     });
-    console.log(handleCountChange);
   };
 
   const handleProductClick = async (product: Product) => {
@@ -93,13 +92,14 @@ const Products: React.FC<ProductsProps> = ({
       <h2 className="text-2xl font-bold text-center mb-6">Our Products</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 justify-items-center mx-auto max-w-6xl">
         {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => {
+          filteredProducts.map((product, index) => {
             const isOutOfStock =
               product.name === "Rohu" ||
               product.name === "Catla" ||
               product.name === "Carp / CC Kendai" ||
               product.name === "Tilapia / Jalebi" ||
               product.name === "Pomfret / Vavval";
+
             return (
               <div
                 key={product._id}
@@ -134,6 +134,45 @@ const Products: React.FC<ProductsProps> = ({
                     <p className="text-lg font-semibold mb-2">
                       ₹{product.price}
                     </p>
+                    {!isOutOfStock && (
+                      <div className="flex items-center">
+                        {counts[index] === 0 ? (
+                          <button
+                            className="bg-white text-black font-bold rounded-md px-4 py-2"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCountChange(product, index, true);
+                            }}
+                          >
+                            Add to Cart
+                          </button>
+                        ) : (
+                          <div className="flex items-center border bg-white rounded-md px-2 py-1">
+                            <button
+                              className="text-black font-bold w-8 h-8 flex items-center justify-center"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleCountChange(product, index, false);
+                              }}
+                            >
+                              -
+                            </button>
+                            <span className="mx-2 font-bold">
+                              {counts[index]}
+                            </span>
+                            <button
+                              className="text-black font-bold w-8 h-8 flex items-center justify-center"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleCountChange(product, index, true);
+                              }}
+                            >
+                              +
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
                 {isOutOfStock && (
