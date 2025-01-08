@@ -10,7 +10,6 @@ const Slideshow: React.FC = () => {
 
   // Sample images for the mobile and desktop layouts
   const mobileImages = [
-    "./images/desktop_image4.jpg",
     "./images/desktop_image1.jpg",
     "./images/desktop_image3.jpg",
     "./images/desktop_image2.jpg",
@@ -18,7 +17,6 @@ const Slideshow: React.FC = () => {
   ];
 
   const desktopImages = [
-    "./images/mobile_image4.jpg",
     "./images/mobile_image3.jpg",
     "./images/mobile_image1.jpg",
     "./images/mobile_image2.jpg",
