@@ -98,6 +98,7 @@ const Products: React.FC<ProductsProps> = ({
               product.name === "Catla" ||
               product.name === "Carp / CC Kendai" ||
               product.name === "Tilapia / Jalebi" ||
+              product.name === "Murrel / Viraal" ||
               product.name === "Pomfret / Vavval";
 
             return (
